@@ -161,7 +161,7 @@ public class JDBCDemo {
 			stmt = conn.createStatement();
 			String sql;
 			//sql = "SELECT id, first, last, age FROM Employees";
-			sql = "SELECT s.id,s.first,s.last,i.name institution,b.name branch,s.semester,c.name course FROM Student s INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
+			sql = "SELECT s.id,s.first,s.last,s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution,b.name branch,s.semester,c.name course FROM Student s INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
 			
 			if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester)) {
 				sql += " WHERE ";
@@ -183,9 +183,9 @@ public class JDBCDemo {
 				student.setId(rs.getString("id"));
 				student.setFirst(rs.getString("first"));
 				student.setLast(rs.getString("last"));
-				student.setInstitution(rs.getString("institution"));
-				student.setCourse(rs.getString("course"));
-				student.setBranch(rs.getString("branch"));
+				student.setInstitution(rs.getString("institutionId") + "~"+ rs.getString("institution"));
+				student.setCourse(rs.getString("courseId") + '~' + rs.getString("course"));
+				student.setBranch(rs.getString("branchId") + '~' + rs.getString("branch"));
 				student.setSemester(rs.getString("semester"));
 				arrayList.add(student);
 
@@ -328,7 +328,7 @@ public class JDBCDemo {
 
 			stmt = conn.createStatement();
 			String sql = "";
-			sql = "SELECT a.date, a.id,a.presence,s.first, s.last, a.institutionId, a.courseId, a.branchId, a.semester FROM Attendance a INNER JOIN Student s ON a.id = s.id";
+			sql = "SELECT a.date, a.id,a.presence,s.first, s.last, s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution, c.name course, b.name branch, a.semester FROM Attendance a INNER JOIN Student s ON a.id = s.id INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
 			
 			if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate)) {
 				sql += " WHERE ";
@@ -356,9 +356,9 @@ public class JDBCDemo {
 				attendance.setFirst(rs.getString("first"));
 				attendance.setLast(rs.getString("last"));
 				attendance.setPresence(rs.getString("presence"));
-				attendance.setInstitution(rs.getString("institutionId"));
-				attendance.setCourse(rs.getString("courseId"));
-				attendance.setBranch(rs.getString("branchId"));
+				attendance.setInstitution(rs.getString("institutionId") + "~"+ rs.getString("institution"));
+				attendance.setCourse(rs.getString("courseId") + '~' + rs.getString("course"));
+				attendance.setBranch(rs.getString("branchId") + '~' + rs.getString("branch"));
 				attendance.setSemester(rs.getString("semester"));
 				arrayList.add(attendance);
 			}
@@ -400,7 +400,7 @@ public class JDBCDemo {
 
 			stmt = conn.createStatement();
 			String sql = "";
-			sql = "SELECT a.id ,s.first, s.last, a.institutionId, a.courseId, a.branchId, a.semester,SUM(a.id LIKE '%') totalDays, SUM(presence=\"Y\") attendedDays FROM Attendance a INNER JOIN Student s ON a.id = s.id";
+			sql = "SELECT a.id ,s.first, s.last,s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution, c.name course, b.name branch, a.semester,SUM(a.id LIKE '%') totalDays, SUM(presence=\"Y\") attendedDays FROM Attendance a INNER JOIN Student s ON a.id = s.id INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
 			
 			if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate)) {
 				sql += " WHERE ";
@@ -427,9 +427,9 @@ public class JDBCDemo {
 				attendancePercentage.setId(rs.getString("id"));
 				attendancePercentage.setFirst(rs.getString("first"));
 				attendancePercentage.setLast(rs.getString("last"));
-				attendancePercentage.setInstitution(rs.getString("institutionId"));
-				attendancePercentage.setCourse(rs.getString("courseId"));
-				attendancePercentage.setBranch(rs.getString("branchId"));
+				attendancePercentage.setInstitution(rs.getString("institutionId") + "~"+ rs.getString("institution"));
+				attendancePercentage.setCourse(rs.getString("courseId") + '~' + rs.getString("course"));
+				attendancePercentage.setBranch(rs.getString("branchId") + '~' + rs.getString("branch"));
 				attendancePercentage.setSemester(rs.getString("semester"));
 				attendancePercentage.setTotalDays(rs.getString("totalDays"));
 				attendancePercentage.setAttendedDays(rs.getString("attendedDays"));

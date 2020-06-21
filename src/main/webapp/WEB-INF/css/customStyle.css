@@ -1,6 +1,12 @@
+body{
+	background-color: #ddf5f5!important;
+	margin-left: 2%!important;
+	margin-right: 2%!important;
+}
 label{
 	font-size: 25px;
 	text-align: left!important;
+	color: #b33c3c;
 }
 
 input[type="button"] {
@@ -18,4 +24,7 @@ select, input[type="text"]{
 }
 span{
 	font-size: 18px;
+}
+nav{
+	background-color: #9bebed!important;
 }

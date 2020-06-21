@@ -29,7 +29,10 @@ function populateFormData(){
 			var tr = '<tr id = "row" name = "row">';
 	
 	        for (var j = 0; j < col.length; j++) {
-				tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
+				if(col[j] == 'institution' || col[j] =='branch' || col[j] == 'course')
+					tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]].split('~')[0] +"'>" + formData[i][col[j]].split('~')[1] + "</span></td>";
+				else
+					tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
 	        }
 			tr += '<td><input type="checkbox" id="presence" name="presence" value = "N" onChange = "toggleCheckBox()"></td>';
 			tr += '</tr>';

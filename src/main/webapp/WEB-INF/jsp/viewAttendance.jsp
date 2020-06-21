@@ -12,11 +12,34 @@
 </head>
 
 <body>
-<div class="container">
 	<h2 id = "formData" hidden= "hidden">${formData}</h2>
 	<h2 id= "institutionList"  hidden= "hidden">${institutionList}</h2>
 	<h2 id= "courseList"  hidden= "hidden">${courseList}</h2>
 	<h2 id= "branchList"  hidden= "hidden">${branchList}</h2>
+	
+	<nav class="navbar navbar-default">
+	  <div class="container-fluid">
+	    <div class="navbar-header">
+	      <a class="navbar-brand" href="/">My App</a>
+	    </div>
+	    <ul class="nav navbar-nav">
+	      <li class="active"><a href="/">Home</a></li>
+	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Student Data<span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+	          <li><a href="/get">Search Student</a></li>
+	          <li><a href="/add">Add Student Data</a></li>
+	        </ul>
+	      </li>
+	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendance<span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+	          <li><a href="/viewAttendance">View Report</a></li>
+	          <li><a href="/addAttendance">Add Attendance</a></li>
+	        </ul>
+	      </li>
+	    </ul>
+	  </div>
+	</nav>
+	
 	<form id = "searchCriteriaForm" class="form-horizontal">
 		<br>
 		<div class="form-group">
@@ -51,8 +74,8 @@
 		 <input type="radio" name="selectionType" value="StudentWise"><label><h4><b> Student Report </b></h4></label>
 		 
   		<br>
-		<span><b>From Date</b></span><input name="startDate" id="startDate" type="date" onChange = "dateChanged();">
-		<span><b>To Date</span></h4><input name="endDate" id="endDate" type="date" onChange = "dateChanged();"><br> <br>
+		<label><h4><b>From Date</b></h4></label><input name="startDate" id="startDate" type="date" onChange = "dateChanged();">
+		<label><h4><b>To Date</b></h4></label><input name="endDate" id="endDate" type="date" onChange = "dateChanged();"><br> <br>
 		
 		<input type="button" value="Search"  class="btn btn-primary" onclick="submitSearchCriteriaForm()">
 	</form>
@@ -91,15 +114,5 @@
 			</tbody>
 		</table>
 	
-	<h3><b>
-		Please click <a href="/get">this link</a> to see all Employee Data.
-	</b></h3>
-	<h3><b>
-		Please click <a href="/add">this link</a> to add more data.
-	</b></h3>
-	<h3><b>
-		Please click <a href="/addAttendance">this link</a> to add attendance.
-	</b></h3>
-</div>
 </body>
 </html>
