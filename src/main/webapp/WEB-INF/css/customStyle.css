@@ -1,0 +1,21 @@
+label{
+	font-size: 25px;
+	text-align: left!important;
+}
+
+input[type="button"] {
+	position: relative;
+    margin-left: 40%;
+    width: 20%;
+}
+
+select, input[type="text"]{
+	width: 50%!important;
+}
+#errorMessage{
+    text-align: center;
+    color: red;
+}
+span{
+	font-size: 18px;
+}
