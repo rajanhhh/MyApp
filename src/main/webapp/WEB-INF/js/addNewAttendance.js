@@ -4,6 +4,17 @@ $(document).ready(function() {
 	populateInstitution();
 	populateCourse();
 	populateBranch();
+	
+	$("#institution, #course, #branch, #semester").change(function(){
+		if('' != document.getElementById("institution").value && '' != document.getElementById("institution").value  &&
+		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+			getListOfSubjects();
+		}else{
+			$("#subject").html('');
+			$("#subject").append ("<option value=''>--Select All Above Fields--</option>");
+		}
+	});
+
 			
 });
 
@@ -11,6 +22,8 @@ function populateFormData(){
 	var formData = $("#formData")[0].innerHTML;
 	formData = jQuery.parseJSON(formData);
 	if(formData.length != 0){
+		$("#institution, #course, #branch, #semester").parent("div").hide();
+		document.getElementById("subject").style.borderColor = "#ccc";
 		$("#attendanceForm").show();
 		$("#errorMessage").text('');
 		
@@ -78,7 +91,37 @@ function populateBranch(){
 	}
 }
 
+function populateSubjectList(){
+	var subjectList = $("#subjectList")[0].innerHTML;
+	if(undefined != subjectList){
+        subjectList = jQuery.parseJSON(subjectList);
+		$("#subject").html('');
+        for (var i = 0; i < subjectList.length; i++) {
+			$("#subject").append ("<option value='"+ subjectList[i].id +"'>"+ subjectList[i].name + "</option>");
+        }
+	}
+}
+
+function getListOfSubjects(){
+		$.ajax({
+			url:"/getSubjectList",
+			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
+				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+			type:'post',
+		  	success:function(json){
+				$("#subjectList").text(json);
+				populateSubjectList();
+		  	},
+			error:function(error){
+				$("#subject").html('');
+				$("#subject").append ("<option value=''>-No Subject Found--</option>");
+			}
+		});
+}
+
 function submitSearchCriteriaForm(){
+	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
+		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
 		$.ajax({
 			url:"/getfilteredData",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
@@ -93,6 +136,14 @@ function submitSearchCriteriaForm(){
 				$("#errorMessage").text(error.responseText);
 			}
 		});
+	}else{
+		for(var i=0; i<document.getElementsByTagName("select").length;i++){
+			if(document.getElementsByTagName("select")[i].value == '')
+				document.getElementsByTagName("select")[i].style.borderColor = "red";
+			else
+				document.getElementsByTagName("select")[i].style.borderColor = "#ccc";
+		}
+	}
 }
 
 function submitForm(){
@@ -116,13 +167,13 @@ function submitForm(){
 			//json += otArr.join(",") + '}';
 			json += otArr.join(",") ;
 			json += ']';
-			json = "date=" + document.getElementById("date").value + "&attendanceList=" +json;
-			isDataSubmitted = true;
+			json = "date=" + document.getElementById("date").value + "&subject=" + document.getElementById("subject").value + "&attendanceList=" +json;
 		$.ajax({
 			url:"/submitAttendance",
 			data:json,
 			type:'post',
 		  	success:function(json){
+				isDataSubmitted = true;
 				$("#errorMessage").text(json);
 		  	},
 			error:function(error){

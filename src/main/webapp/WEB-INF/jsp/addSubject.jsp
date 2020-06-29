@@ -5,17 +5,18 @@
 <script src="/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
-<script src="/js/showDataInTable.js"></script>
+<script src="/js/addSubject.js"></script>
 </head>
 <head>
-<title>Student Details</title>
+<title>Add Subject Form</title>
 </head>
 
 <body>
-	<h2 id = "formData" hidden= "hidden">${formData}</h2>
+	
 	<h2 id= "institutionList"  hidden= "hidden">${institutionList}</h2>
 	<h2 id= "courseList"  hidden= "hidden">${courseList}</h2>
 	<h2 id= "branchList"  hidden= "hidden">${branchList}</h2>
+	<h2 id= "subjectList"  hidden= "hidden">${subjectList}</h2>
 	
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
@@ -46,8 +47,9 @@
 	    </ul>
 	  </div>
 	</nav>
-
-	<form id = "searchCriteriaForm" class="form-horizontal" >
+	
+	<h3 id = "errorMessage"></h3>
+	<form class="form-horizontal">
 		<br>
 		<div class="form-group">
 			<label class="control-label col-sm-5">Institution Name : </label>
@@ -64,7 +66,7 @@
 		<div class="form-group">
 				<label class="control-label col-sm-5">Semester/Year : </label>
 				<select list="semesters" name = "semester" class="col-sm-5 form-control" id = "semester" type="text">
-				  <option value="">--Any--</option>
+				  <option value="">--Select--</option>
 				  <option value="1">1</option>
 				  <option value="2">2</option>
 				  <option value="3">3</option>
@@ -75,23 +77,17 @@
 				  <option value="8">8</option>
 				</select>
 		</div>
-		<input type="button" class="btn btn-primary" value="Search" onclick="submitSearchCriteriaForm()">
+		<div class="form-group">
+			<label class="control-label col-sm-5">Available subjects : </label>
+			<select name = "subject" id = "subject" class="col-sm-5 form-control" type="text">
+				<option value=''>--Select All Above Fields--</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-5">New Subject Name : </label>
+			<input name = "newSubject" id = "newSubject" class="col-sm-5 form-control" type="text">
+		</div>
+		<input type="button" value="Submit" class="btn btn-primary" onclick="submitForm()">
 	</form>
-	
-	<h3 id = "errorMessage"></h3>
-
-		<table id="studentInfoTable" class="table table-bordered" style="display:none">
-			<tbody>
-				<tr>
-					<th>Registration Number</th>
-					<th>First Name</th>
-					<th>Last Name</th>
-					<th>Institution</th>
-					<th>Course</th>
-					<th>Branch</th>
-					<th>Semester</th>
-				</tr>
-			</tbody>
-		</table>
 </body>
 </html>

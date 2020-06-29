@@ -5,10 +5,10 @@
 <script src="/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
-<script src="/js/showDataInTable.js"></script>
+<script src="/js/updateAttendanceScript.js"></script>
 </head>
 <head>
-<title>Student Details</title>
+<title>Update Attendance</title>
 </head>
 
 <body>
@@ -16,6 +16,7 @@
 	<h2 id= "institutionList"  hidden= "hidden">${institutionList}</h2>
 	<h2 id= "courseList"  hidden= "hidden">${courseList}</h2>
 	<h2 id= "branchList"  hidden= "hidden">${branchList}</h2>
+	<h2 id= "subjectList"  hidden= "hidden">${subjectList}</h2>
 	
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
@@ -46,8 +47,8 @@
 	    </ul>
 	  </div>
 	</nav>
-
-	<form id = "searchCriteriaForm" class="form-horizontal" >
+	
+	<form id = "searchCriteriaForm" class="form-horizontal">
 		<br>
 		<div class="form-group">
 			<label class="control-label col-sm-5">Institution Name : </label>
@@ -56,11 +57,11 @@
 		<div class="form-group">
 			<label class="control-label col-sm-5">Course Name : </label>
 			<select name = "course" id = "course" class="col-sm-5 form-control" type="text"></select>
-			</div>
+		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-5">Branch Name : </label>
 			<select name = "branch" id = "branch" class="col-sm-5 form-control" type="text"></select>
-			</div>
+		</div>
 		<div class="form-group">
 				<label class="control-label col-sm-5">Semester/Year : </label>
 				<select list="semesters" name = "semester" class="col-sm-5 form-control" id = "semester" type="text">
@@ -75,12 +76,22 @@
 				  <option value="8">8</option>
 				</select>
 		</div>
-		<input type="button" class="btn btn-primary" value="Search" onclick="submitSearchCriteriaForm()">
+		<div class="form-group">
+			<label class="control-label col-sm-5">Subject Name : </label>
+			<select name = "subject" id = "subject" class="col-sm-5 form-control" type="text">
+				<option value=''>--Any--[Select All Above Fields to get list of subjects]</option>
+			</select>
+			</div>
+		
+  		<br>
+		<label><h4><b>Date</b></h4></label><input name="date" id="date" type="date" onChange = "dateChanged();">
+		
+		<input type="button" value="Search"  class="btn btn-primary" onclick="submitSearchCriteriaForm()">
 	</form>
 	
 	<h3 id = "errorMessage"></h3>
-
-		<table id="studentInfoTable" class="table table-bordered" style="display:none">
+	<form id = "attendanceForm" style="display:none">
+		<table id="attendanceTable" class="table table-bordered">
 			<tbody>
 				<tr>
 					<th>Registration Number</th>
@@ -90,8 +101,12 @@
 					<th>Course</th>
 					<th>Branch</th>
 					<th>Semester</th>
+					<th>Presence</th>
+					<th>Action</th>
 				</tr>
 			</tbody>
 		</table>
+		<input type="button" value="Submit" class="btn btn-primary" onclick="submitForm()">
+	</form>
 </body>
 </html>

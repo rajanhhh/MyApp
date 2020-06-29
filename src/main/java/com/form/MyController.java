@@ -22,6 +22,7 @@ import com.bean.Branch;
 import com.bean.Course;
 import com.bean.Institution;
 import com.bean.Student;
+import com.bean.UpdateAttendance;
 import com.google.gson.Gson;
 
 
@@ -113,7 +114,7 @@ public class MyController {
 	@RequestMapping(value = "/getfilteredData",method = RequestMethod.POST)
 	public String getFilteredData(ModelMap model,Student student, HttpServletResponse response) {
 		try {
-			ArrayList<Student> arrayList = JDBCDemo.fetchFilteredData(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester());
+			ArrayList<Student> arrayList = JDBCDemo.fetchFilteredData(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester());
 			if(arrayList.size() != 0) {
 				ObjectMapper Obj = new ObjectMapper(); 
 				 String jsonStr = Obj.writeValueAsString(arrayList);
@@ -123,6 +124,92 @@ public class MyController {
 				model.addAttribute("message", "No Record Found");
 				response.setStatus(400);
 			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "textResponse";
+	}
+	
+	@RequestMapping(value = "/updateData",method = RequestMethod.GET)
+	public String getUpdateDetailsForm(ModelMap model) {
+		try {
+			 ObjectMapper Obj = new ObjectMapper(); 
+			ArrayList<Institution> institutionList= JDBCUtil.getInstitutionList();
+			 String institutionListJSON = Obj.writeValueAsString(institutionList);
+			 model.addAttribute("institutionList", institutionListJSON);
+			 
+			 ArrayList<Course> courseList= JDBCUtil.getCourseList();
+			 String courseListJSON = Obj.writeValueAsString(courseList);
+			 model.addAttribute("courseList", courseListJSON);
+			 
+			 ArrayList<Branch> branchList= JDBCUtil.getBranchList();
+			 String branchListJSON = Obj.writeValueAsString(branchList);
+			 model.addAttribute("branchList", branchListJSON);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "modifyData";
+	}
+	
+	@RequestMapping(value = "/updateStudentData",method = RequestMethod.POST)
+	public String updateStudentDetails(ModelMap model,Student student, String newFirst, String newLast, String newInstitution, String newCourse, String newBranch, String newSemester, HttpServletResponse response) {
+		try {
+			if(!StringUtils.isEmpty(student.getId()) && !StringUtils.isEmpty(student.getInstitution())
+					&&	!StringUtils.isEmpty(student.getFirst()) && !StringUtils.isEmpty(student.getLast()) 
+					&& !StringUtils.isEmpty(student.getBranch()) && !StringUtils.isEmpty(student.getSemester()) && !StringUtils.isEmpty(student.getCourse())
+					&& !StringUtils.isEmpty(newFirst) && !StringUtils.isEmpty(newLast)
+					&&	!StringUtils.isEmpty(newInstitution) && !StringUtils.isEmpty(newCourse) 
+					&& !StringUtils.isEmpty(newBranch) && !StringUtils.isEmpty(newSemester)) {
+				ArrayList<Attendance> arrayList= JDBCDemo.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),null,null,null);
+				 if(arrayList.size() == 0) {
+					 boolean isSuccess = JDBCDemo.updateStudentDetails(student, newFirst, newLast, newInstitution, newCourse, newBranch, newSemester);
+					 if(isSuccess) {
+						model.addAttribute("message", "Successfully Updated");
+						response.setStatus(200);
+					 }else {
+						 model.addAttribute("message", "Error Occurred");
+						 response.setStatus(400);
+					 }
+				}else {
+					model.addAttribute("message", "Cannot edit as Attendance data already exists for this student.\nContact admin to modify data.");
+					response.setStatus(400);
+				}
+			}else {
+				model.addAttribute("message", "Cannot enter null value");
+				response.setStatus(400);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "textResponse";
+	}
+	
+	@RequestMapping(value = "/deleteStudentData",method = RequestMethod.POST)
+	public String deleteStudentDetails(ModelMap model,Student student, HttpServletResponse response) {
+		try {
+			if(!StringUtils.isEmpty(student.getId()) && !StringUtils.isEmpty(student.getInstitution())
+					&&	!StringUtils.isEmpty(student.getFirst()) && !StringUtils.isEmpty(student.getLast()) 
+					&& !StringUtils.isEmpty(student.getBranch()) && !StringUtils.isEmpty(student.getSemester()) && !StringUtils.isEmpty(student.getCourse())) {
+				ArrayList<Attendance> arrayList= JDBCDemo.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),null,null,null);
+				 if(arrayList.size() == 0) {
+					 boolean isSuccess = JDBCDemo.deleteStudentDetails(student);
+					 if(isSuccess) {
+						model.addAttribute("message", "Successfully Deleted");
+						response.setStatus(200);
+					 }else {
+						 model.addAttribute("message", "Error Occurred");
+						 response.setStatus(400);
+					 }
+				}else {
+					model.addAttribute("message", "Cannot delete as Attendance data already exists for this student.Contact admin to modify data.");
+					response.setStatus(400);
+				}
+			}else {
+				model.addAttribute("message", "Cannot enter null value");
+				response.setStatus(400);
+			}
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -153,7 +240,7 @@ public class MyController {
 	}
 	
 	@RequestMapping(value = "/submitAttendance",method = RequestMethod.POST, produces="text/plain")
-	public String submitAddAttendanceForm(ModelMap model,HttpServletRequest request, HttpServletResponse response,AttendanceForm attendanceForm) {
+	public String submitAttendance(ModelMap model,HttpServletRequest request, HttpServletResponse response,AttendanceForm attendanceForm) {
 		try {
 			ArrayList<Attendance> arrayList = new ArrayList<Attendance>();
 			Gson gson = new Gson();
@@ -174,6 +261,7 @@ public class MyController {
 				attendance.setBranch(map.get("branch"));
 				attendance.setSemester(map.get("semester"));
 				attendance.setPresence(map.get("presence"));
+				attendance.setSubject(attendanceForm.getSubject());
 				arrayList.add(attendance);
 			}
 			isSuccess= JDBCDemo.addAttendanceRecord(attendanceForm.getDate(), arrayList);
@@ -192,12 +280,9 @@ public class MyController {
 	}
 	
 	@RequestMapping(value = "/viewAttendance",method = RequestMethod.GET)
-	public String viewAttendance(ModelMap model,HttpServletRequest request, HttpServletResponse response,String date) {
+	public String viewAttendance(ModelMap model,HttpServletRequest request) {
 		try {
-			ArrayList<Student> arrayList= JDBCDemo.fetch();
 			 ObjectMapper Obj = new ObjectMapper(); 
-			 String jsonStr = Obj.writeValueAsString(arrayList);
-			 model.addAttribute("formData", jsonStr);
 			 
 			 ArrayList<Institution> institutionList= JDBCUtil.getInstitutionList();
 			 String institutionListJSON = Obj.writeValueAsString(institutionList);
@@ -217,7 +302,7 @@ public class MyController {
 		return "viewAttendance";
 	}
 	@RequestMapping(value = "/getAttendanceData",method = RequestMethod.POST)
-	public String getAttendanceData(ModelMap model,HttpServletRequest request, HttpServletResponse response,Student student, String startDate, String endDate) {
+	public String getAttendanceData(ModelMap model,HttpServletRequest request, HttpServletResponse response,Student student, String subject, String startDate, String endDate) {
 		try {
 			if(StringUtils.isEmpty(startDate) || StringUtils.isEmpty(endDate)) {
 				model.addAttribute("message", "Please enter a valid date");
@@ -225,7 +310,7 @@ public class MyController {
 				return "textResponse";
 				
 			}
-			 ArrayList<Attendance> arrayList= JDBCDemo.fetchAttendanceRecord(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),startDate, endDate);
+			 ArrayList<Attendance> arrayList= JDBCDemo.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,startDate, endDate);
 			 if(arrayList.size() != 0) {
 				 ObjectMapper Obj = new ObjectMapper(); 
 				 String jsonStr = Obj.writeValueAsString(arrayList);
@@ -243,7 +328,7 @@ public class MyController {
 	}
 	
 	@RequestMapping(value = "/getAttendancePercentage",method = RequestMethod.POST)
-	public String getAttendancePercentage(ModelMap model,HttpServletRequest request, HttpServletResponse response,Student student, String startDate, String endDate) {
+	public String getAttendancePercentage(ModelMap model,HttpServletRequest request, HttpServletResponse response,Student student, String subject, String startDate, String endDate) {
 		try {
 			if(StringUtils.isEmpty(startDate) || StringUtils.isEmpty(endDate)) {
 				model.addAttribute("message", "Please enter a valid date");
@@ -251,7 +336,7 @@ public class MyController {
 				return "textResponse";
 				
 			}
-			 ArrayList<AttendancePercentage> arrayList= JDBCDemo.fetchAttendanceRecordPercentage(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),startDate, endDate);
+			 ArrayList<AttendancePercentage> arrayList= JDBCDemo.fetchAttendanceRecordPercentage(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,startDate, endDate);
 			 if(arrayList.size() != 0) {
 				 for (AttendancePercentage attendancePercentage : arrayList) {
 					 if(StringUtils.isEmpty(attendancePercentage.getTotalDays()) || attendancePercentage.getTotalDays() == "0") {
@@ -271,6 +356,109 @@ public class MyController {
 				response.setStatus(400);
 			}
 			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "textResponse";
+	}
+	
+	@RequestMapping(value = "/updateAttendance",method = RequestMethod.GET)
+	public String updateAttendance(ModelMap model,HttpServletRequest request) {
+		try {
+			 ObjectMapper Obj = new ObjectMapper(); 
+			 
+			 ArrayList<Institution> institutionList= JDBCUtil.getInstitutionList();
+			 String institutionListJSON = Obj.writeValueAsString(institutionList);
+			 model.addAttribute("institutionList", institutionListJSON);
+			 
+			 ArrayList<Course> courseList= JDBCUtil.getCourseList();
+			 String courseListJSON = Obj.writeValueAsString(courseList);
+			 model.addAttribute("courseList", courseListJSON);
+			 
+			 ArrayList<Branch> branchList= JDBCUtil.getBranchList();
+			 String branchListJSON = Obj.writeValueAsString(branchList);
+			 model.addAttribute("branchList", branchListJSON);
+			return "updateAttendance";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "updateAttendance";
+	}
+	
+	@RequestMapping(value = "/getAttendanceDataForAll",method = RequestMethod.POST)
+	public String getAttendanceDataForAll(ModelMap model,HttpServletRequest request, HttpServletResponse response,Student student, String subject, String date) {
+		try {
+			if(StringUtils.isEmpty(date)) {
+				model.addAttribute("message", "Please enter a valid date");
+				response.setStatus(400);
+				return "textResponse";
+
+			}
+			ArrayList<Attendance> arrayList= JDBCDemo.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject, date,date);
+			if(arrayList.size() ==0){
+				model.addAttribute("message", "Attendance Data doesn't exist for this date. Please go to 'Add Attendance' section");
+				response.setStatus(400);
+				return "textResponse";
+			}else {
+				ArrayList<UpdateAttendance> arrayList1= JDBCDemo.fetchAttendanceRecordForAll(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject, date);
+				if(arrayList1.size() != 0) {
+					for (UpdateAttendance updateAttendance : arrayList1) { 
+						if(StringUtils.isEmpty(updateAttendance.getPresence()))
+							updateAttendance.setStatus("new");
+						else
+							updateAttendance.setStatus("old");
+					}
+					ObjectMapper Obj = new ObjectMapper(); 
+					String jsonStr = Obj.writeValueAsString(arrayList1);
+					model.addAttribute("message", jsonStr);
+					response.setStatus(200);
+				}else {
+					model.addAttribute("message", "No Data Found");
+					response.setStatus(400);
+				}
+			}
+			 
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return "textResponse";
+	}
+	
+	@RequestMapping(value = "/submitUpdatedAttendance",method = RequestMethod.POST, produces="text/plain")
+	public String submitUpdatedAttendance(ModelMap model,HttpServletRequest request, HttpServletResponse response,AttendanceForm attendanceForm) {
+		try {
+			ArrayList<UpdateAttendance> arrayList = new ArrayList<UpdateAttendance>();
+			Gson gson = new Gson();
+			boolean isSuccess = true;
+			
+			if(StringUtils.isEmpty(attendanceForm.getDate())) {
+				model.addAttribute("message", "Please enter a valid date");
+				response.setStatus(400);
+				return "textResponse";
+				
+			}
+			List<Map<String, String>> attendanceList = gson.fromJson(attendanceForm.getAttendanceList(), List.class);
+			for (Map<String, String> map : attendanceList) { 
+				UpdateAttendance updateAttendance = new UpdateAttendance();
+				updateAttendance.setId(map.get("id"));
+				updateAttendance.setInstitution(map.get("institution"));
+				updateAttendance.setCourse(map.get("course"));
+				updateAttendance.setBranch(map.get("branch"));
+				updateAttendance.setSemester(map.get("semester"));
+				updateAttendance.setPresence(map.get("newPresence"));
+				updateAttendance.setStatus(map.get("status"));
+				arrayList.add(updateAttendance);
+			}
+			isSuccess= JDBCDemo.updateAttendanceRecordForAll(attendanceForm.getDate(), attendanceForm.getSubject(), arrayList);
+			if(isSuccess) {
+				model.addAttribute("message", "Data Updated successfully");
+				response.setStatus(200);
+			}else {
+				model.addAttribute("message", "Duplicate data entered");
+				response.setStatus(400);
+			}
+			
+			return "textResponse";
 		} catch (Exception e) {
 			e.printStackTrace();
 		}

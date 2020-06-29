@@ -16,6 +16,7 @@
 	<h2 id= "institutionList"  hidden= "hidden">${institutionList}</h2>
 	<h2 id= "courseList"  hidden= "hidden">${courseList}</h2>
 	<h2 id= "branchList"  hidden= "hidden">${branchList}</h2>
+	<h2 id= "subjectList"  hidden= "hidden">${subjectList}</h2>
 	
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
@@ -28,12 +29,19 @@
 	        <ul class="dropdown-menu">
 	          <li><a href="/get">Search Student</a></li>
 	          <li><a href="/add">Add Student Data</a></li>
+	          <li><a href="/updateData">Update/Delete Student Data</a></li>
 	        </ul>
 	      </li>
 	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendance<span class="caret"></span></a>
 	        <ul class="dropdown-menu">
 	          <li><a href="/viewAttendance">View Report</a></li>
 	          <li><a href="/addAttendance">Add Attendance</a></li>
+	          <li><a href="/updateAttendance">Update Attendance</a></li>
+	        </ul>
+	      </li>
+	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin Zone<span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+	          <li><a href="/addSubject">Add New Subject</a></li>
 	        </ul>
 	      </li>
 	    </ul>
@@ -68,8 +76,13 @@
 				  <option value="8">8</option>
 				</select>
 		</div>
-		 <!-- <label class="radio-inline"><input type="radio" name="selectionType" checked="checked" value="DayWise"><h4><b>Day by Day Report</b></h4></label>
-		 <label class="radio-inline"><input type="radio" name="selectionType" value="StudentWise"><h4><b>Student Report</b></h4></label> -->
+		<div class="form-group">
+			<label class="control-label col-sm-5">Subject Name : </label>
+			<select name = "subject" id = "subject" class="col-sm-5 form-control" type="text">
+				<option value=''>--Any--[Select All Above Fields to get list of subjects]</option>
+			</select>
+			</div>
+		
 		 <input type="radio" name="selectionType" checked="checked" value="DayWise"><label><h4><b> Day by Day Report </b></h4></label>
 		 <input type="radio" name="selectionType" value="StudentWise"><label><h4><b> Student Report </b></h4></label>
 		 
@@ -93,6 +106,7 @@
 					<th>Course</th>
 					<th>Branch</th>
 					<th>Semester</th>
+					<th>Subject</th>
 					<th>Presence</th>
 				</tr>
 			</tbody>
@@ -107,6 +121,7 @@
 					<th>Course</th>
 					<th>Branch</th>
 					<th>Semester</th>
+					<th>Subject</th>
 					<th>Classes Attended</th>
 					<th>Total Number of Classes</th>
 					<th>Attendance Percentage</th>

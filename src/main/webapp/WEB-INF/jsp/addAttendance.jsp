@@ -16,6 +16,7 @@
 	<h2 id= "institutionList"  hidden= "hidden">${institutionList}</h2>
 	<h2 id= "courseList"  hidden= "hidden">${courseList}</h2>
 	<h2 id= "branchList"  hidden= "hidden">${branchList}</h2>
+	<h2 id= "subjectList"  hidden= "hidden">${subjectList}</h2>
 	
 	<nav class="navbar navbar-default">
 	  <div class="container-fluid">
@@ -28,12 +29,19 @@
 	        <ul class="dropdown-menu">
 	          <li><a href="/get">Search Student</a></li>
 	          <li><a href="/add">Add Student Data</a></li>
+	          <li><a href="/updateData">Update/Delete Student Data</a></li>
 	        </ul>
 	      </li>
 	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendance<span class="caret"></span></a>
 	        <ul class="dropdown-menu">
 	          <li><a href="/viewAttendance">View Report</a></li>
 	          <li><a href="/addAttendance">Add Attendance</a></li>
+	          <li><a href="/updateAttendance">Update Attendance</a></li>
+	        </ul>
+	      </li>
+	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin Zone<span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+	          <li><a href="/addSubject">Add New Subject</a></li>
 	        </ul>
 	      </li>
 	    </ul>
@@ -68,6 +76,12 @@
 				  <option value="8">8</option>
 				</select>
 		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-5">Subject Name : </label>
+			<select name = "subject" id = "subject" class="col-sm-5 form-control" type="text">
+				<option value=''>--Select All Above Fields--</option>
+			</select>
+			</div>
 		<input type="button" value="Submit" class="btn btn-primary" onclick="submitSearchCriteriaForm()">
 	</form>
 	

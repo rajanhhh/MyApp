@@ -1,8 +1,23 @@
+var isDataSubmitted = false;
+
 $(document).ready(function() {
-		populateInstitution();
-		populateCourse();
-		populateBranch();
+	populateInstitution();
+	populateCourse();
+	populateBranch();
+	
+	$("#institution, #course, #branch, #semester").change(function(){
+		if('' != document.getElementById("institution").value && '' != document.getElementById("institution").value  &&
+		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+			getListOfSubjects();
+		}else{
+			$("#subject").html('');
+			$("#subject").append ("<option value=''>--Select All Above Fields--</option>");
+		}
+	});
+
+			
 });
+
 
 function populateInstitution(){
 	var institutionList = $("#institutionList")[0].innerHTML;
@@ -37,20 +52,47 @@ function populateBranch(){
 	}
 }
 
+function populateSubjectList(){
+	var subjectList = $("#subjectList")[0].innerHTML;
+	if(undefined != subjectList){
+        subjectList = jQuery.parseJSON(subjectList);
+		$("#subject").html('');
+        for (var i = 0; i < subjectList.length; i++) {
+			$("#subject").append ("<option value='"+ subjectList[i].id +"'>"+ subjectList[i].name + "</option>");
+        }
+	}
+}
+
+function getListOfSubjects(){
+		$.ajax({
+			url:"/getSubjectList",
+			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
+				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+			type:'post',
+		  	success:function(json){
+				$("#subjectList").text(json);
+				populateSubjectList();
+		  	},
+			error:function(error){
+				$("#subject").html('');
+				$("#subject").append ("<option value='0'>-No Subject Found--</option>");
+			}
+		});
+}
+
 function submitForm(){
-	if('' != document.getElementById("id").value && '' != document.getElementById("first").value &&
-		'' != document.getElementById("last").value &&
-		'' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
+		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value &&
+		'' != document.getElementById("newSubject").value){
 			$.ajax({
-				url:"/addData",
-				data:"id="+document.getElementById("id").value + "&first=" + document.getElementById("first").value
-							+ "&last=" + document.getElementById("last").value + "&institution=" + document.getElementById("institution").value
-							+ "&course=" + document.getElementById("course").value + "&branch=" + document.getElementById("branch").value
-							+ "&semester=" + document.getElementById("semester").value,
+				url:"/addNewSubject",
+				data:"institution=" + document.getElementById("institution").value
+						+ "&course=" + document.getElementById("course").value + "&branch=" + document.getElementById("branch").value
+						+ "&semester=" + document.getElementById("semester").value + "&subject=" + document.getElementById("newSubject").value,
 				type:'post',
 			  	success:function(json){
 					$("#errorMessage").text(json);
+					getListOfSubjects();
 			  	},
 				error:function(error){
 					$("#errorMessage").text(error.responseText);

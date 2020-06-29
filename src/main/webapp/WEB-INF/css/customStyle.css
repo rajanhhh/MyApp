@@ -28,3 +28,10 @@ span{
 nav{
 	background-color: #9bebed!important;
 }
+#updateFormHeader{
+	text-align: center;
+    margin-top: 0px;
+    color: #4153a5;
+    font-weight: 600;
+    font-family: sans-serif;
+}

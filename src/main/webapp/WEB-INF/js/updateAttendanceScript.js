@@ -78,57 +78,44 @@ function getListOfSubjects(){
 }
 
 function submitSearchCriteriaForm(){
-	if($("input[name='selectionType']:checked").prop("value") == "DayWise")
-		submitSearchCriteriaFormDayWise();
-	else
-		submitSearchCriteriaFormStudentWise();		
-}
-
-function submitSearchCriteriaFormDayWise(){
+	if('' != document.getElementById("institution").value &&
+		'' != document.getElementById("course").value  && '' != document.getElementById("branch").value &&
+		'' != document.getElementById("semester").value && '' != document.getElementById("subject").value &&
+		 '' != document.getElementById("date").value){
 		$.ajax({
-			url:"/getAttendanceData",
+			url:"/getAttendanceDataForAll",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value 
 				+ "&branch=" + document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value
 				+ "&subject=" + document.getElementById("subject").value
-				+ "&startDate=" + document.getElementById("startDate").value + "&endDate=" + document.getElementById("endDate").value,
+				+ "&date=" + document.getElementById("date").value,
 			type:'post',
 		  	success:function(json){
 				$("#formData").text(json);
 				$("#errorMessage").text('');
-				$("#attendanceTablePercentage").hide();
-				$("#attendanceTable").show();
+				$("#attendanceForm").show();
 				showAttendanceData();
 		  	},
 			error:function(error){
-				$("#attendanceTable").hide();
-				$("#attendanceTablePercentage").hide();
+				$("#attendanceForm").hide();
 				$("#errorMessage").text(error.responseText);
 			}
 		});
+	}else{
+		for(var i=0; i<document.getElementsByTagName("select").length;i++){
+			if(document.getElementsByTagName("select")[i].value == '')
+				document.getElementsByTagName("select")[i].style.borderColor = "red";
+			else
+				document.getElementsByTagName("select")[i].style.borderColor = "#ccc";
+		}
+		for(var i=0; i<document.getElementsByTagName("input").length;i++){
+			if(document.getElementsByTagName("input")[i].value == '')
+				document.getElementsByTagName("input")[i].style.borderColor = "red";
+			else
+				document.getElementsByTagName("input")[i].style.borderColor = "#ccc";
+		}
+	}
 }
 
-function submitSearchCriteriaFormStudentWise(){
-		$.ajax({
-			url:"/getAttendancePercentage",
-			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value 
-				+ "&branch=" + document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value
-				+ "&subject=" + document.getElementById("subject").value
-				+ "&startDate=" + document.getElementById("startDate").value + "&endDate=" + document.getElementById("endDate").value,
-			type:'post',
-		  	success:function(json){
-				$("#formData").text(json);
-				$("#errorMessage").text('');
-				$("#attendanceTable").hide();
-				$("#attendanceTablePercentage").show();
-				showAttendanceData();
-		  	},
-			error:function(error){
-				$("#attendanceTable").hide();
-				$("#attendanceTablePercentage").hide();
-				$("#errorMessage").text(error.responseText);
-			}
-		});
-}
 
 function dateChanged(){
 	if(isDataSubmitted){
@@ -154,14 +141,67 @@ function showAttendanceData(){
     for (var i = 0; i < formData.length; i++) {
 		var tbody = $("tbody:visible");
 		var tr = '<tr id = "row" name = "row">';
-
+		
         for (var j = 0; j < col.length; j++) {
-			if(col[j] == 'institution' || col[j] =='branch' || col[j] == 'course')
+			if(col[j] == 'institution' || col[j] =='branch' || col[j] == 'course'){
 				tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]].split('~')[0] +"'>" + formData[i][col[j]].split('~')[1] + "</span></td>";
-			else
+			}else if(col[j] == 'status'){
+				tr += "<td  hidden = 'hidden'><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
+			}else if(col[j] == 'presence' && formData[i]['presence'] != 'Y' && formData[i]['presence'] != 'N'){
+				tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='N'>" + 'Not Available' + "</span></td>";
+			}else{
 				tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
+			}
         }
+		var attnVal= formData[i]['presence'];
+		if(attnVal == 'Y')
+			tr += '<td><input type="checkbox" id="newPresence" name="newPresence" value = "Y" checked="checked" onChange = "toggleCheckBox()"></td>';
+		else
+			tr += '<td><input type="checkbox" id="newPresence" name="newPresence" value = "N" onChange = "toggleCheckBox()"></td>';
 		tr += '</tr>';
 		tbody.append(tr);
     }
+}
+
+function submitForm(){
+			var json = '[';
+		   var otArr = [];
+		   var tbl2 = $('#attendanceTable tbody tr').each(function(i) {        
+		      x = $(this).children();
+		      var itArr = [];
+			  var isBlank = true;
+		      x.each(function() {
+				 if(null!= this.firstElementChild){
+					//itArr.push('"' + this.firstElementChild.id+ '"' + ":" +'"' + this.firstElementChild.value + '"');
+					itArr.push('"' + this.firstElementChild.id+ '"' + ":" +'"' + this.firstElementChild.getAttribute("value") + '"');
+					isBlank = false;
+				}
+		      });
+			  if(!isBlank)
+		      otArr.push('{' + itArr.join(',') + '}');
+		   })
+		   
+			//json += otArr.join(",") + '}';
+			json += otArr.join(",") ;
+			json += ']';
+			json = "date=" + document.getElementById("date").value + "&subject=" + document.getElementById("subject").value + "&attendanceList=" +json;
+			isDataSubmitted = true;
+		$.ajax({
+			url:"/submitUpdatedAttendance",
+			data:json,
+			type:'post',
+		  	success:function(json){
+				$("#errorMessage").text(json);
+		  	},
+			error:function(error){
+				$("#errorMessage").text(error.responseText);
+			}
+		});
+}
+
+function toggleCheckBox(){
+	if(this.event.target.checked)
+		this.event.target.value = "Y";
+	else
+		this.event.target.value = "N";
 }

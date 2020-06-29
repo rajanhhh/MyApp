@@ -4,15 +4,18 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import com.bean.Branch;
 import com.bean.Course;
 import com.bean.Institution;
 import com.bean.Student;
+import com.bean.Subject;
 
 @Component("JDBCUtil")
 public class JDBCUtil {
@@ -28,64 +31,6 @@ public class JDBCUtil {
 		static final String USER = "sql12348159";
 		static final String PASS = "dEEwGHqICT";
 		
-		public void main(String[] args) {
-			Connection conn = null;
-			Statement stmt = null;
-			try{
-				//STEP 2: Register JDBC driver
-				Class.forName(JDBC_DRIVER);
-				//STEP 3: Open a connection
-				System.out.println("Connecting to database...");
-				conn = DriverManager.getConnection(DB_URL,USER,PASS);
-				
-
-				//STEP 4: Execute a query
-				System.out.println("Creating statement...");
-				stmt = conn.createStatement();
-				String sql;
-				sql = "SELECT id, first, last, age FROM Employees";
-				ResultSet rs = stmt.executeQuery(sql);
-
-				//STEP 5: Extract data from result set
-				while(rs.next()){
-					//Retrieve by column name
-					int id  = rs.getInt("id");
-					int age = rs.getInt("age");
-					String first = rs.getString("first");
-					String last = rs.getString("last");
-
-					//Display values
-					System.out.print("ID: " + id);
-					System.out.print(", Age: " + age);
-					System.out.print(", First: " + first);
-					System.out.println(", Last: " + last);
-				}
-				//STEP 6: Clean-up environment
-				rs.close();
-				stmt.close();
-				conn.close();
-			}catch(SQLException se){
-				//Handle errors for JDBC
-				se.printStackTrace();
-			}catch(Exception e){
-				//Handle errors for Class.forName
-				e.printStackTrace();
-			}finally{
-				//finally block used to close resources
-				try{
-					if(stmt!=null)
-						stmt.close();
-				}catch(SQLException se2){
-				}// nothing we can do
-				try{
-					if(conn!=null)
-						conn.close();
-				}catch(SQLException se){
-					se.printStackTrace();
-				}//end finally try
-			}//end try
-			System.out.println("Goodbye!");
-		}//end main
 		
 		public ArrayList<Institution> getInstitutionList() {
 			Connection conn = null;
@@ -98,7 +43,6 @@ public class JDBCUtil {
 
 				stmt = conn.createStatement();
 				String sql;
-				//sql = "SELECT id, first, last, age FROM Employees";
 				sql = "SELECT * FROM Institution;";
 				ResultSet rs = stmt.executeQuery(sql);
 
@@ -144,7 +88,6 @@ public class JDBCUtil {
 
 				stmt = conn.createStatement();
 				String sql;
-				//sql = "SELECT id, first, last, age FROM Employees";
 				sql = "SELECT * FROM Course;";
 				ResultSet rs = stmt.executeQuery(sql);
 
@@ -189,7 +132,6 @@ public class JDBCUtil {
 
 				stmt = conn.createStatement();
 				String sql;
-				//sql = "SELECT id, first, last, age FROM Employees";
 				sql = "SELECT * FROM Branch;";
 				ResultSet rs = stmt.executeQuery(sql);
 
@@ -221,5 +163,116 @@ public class JDBCUtil {
 				}
 			}
 			return arrayList;
+		}
+		
+		public ArrayList<Subject> getSubjectList(String institution, String course, String branch, String semester) {
+			Connection conn = null;
+			Statement stmt = null;
+			ArrayList<Subject> arrayList = new ArrayList<Subject>();
+			try{
+				Class.forName(JDBC_DRIVER);
+
+				conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+				stmt = conn.createStatement();
+				String sql;
+				sql = "SELECT s.id, s.name FROM Subject s";
+				
+				if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester)) {
+					sql += " WHERE ";
+					if(!StringUtils.isEmpty(institution))
+						sql += "s.institutionId='" + institution+"' AND ";
+					if(!StringUtils.isEmpty(course))
+						sql += "s.courseId='" + course+"' AND ";
+					if(!StringUtils.isEmpty(branch))
+						sql += "s.branchId='" + branch+"' AND ";
+					if(!StringUtils.isEmpty(semester))
+						sql += "s.semester='" + semester+"' AND ";
+					sql = sql.substring(0, sql.length()-4);
+				}
+				
+				ResultSet rs = stmt.executeQuery(sql);
+
+				while(rs.next()){
+					Subject subject = new Subject();
+					subject.setId(rs.getString("id"));
+					subject.setName(rs.getString("name"));
+					arrayList.add(subject);
+
+				}
+				stmt.close();
+				conn.close();
+
+			}catch(SQLException se){
+				se.printStackTrace();
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}
+			}
+			return arrayList;
+		}
+		
+		public boolean addSubject(String institution, String course, String branch, String semester, String subject) {
+			Connection conn = null;
+			Statement stmt = null;
+			boolean isSuccess = true;
+			try{
+				Class.forName(JDBC_DRIVER);
+
+				conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+				stmt = conn.createStatement();
+				String sql;
+				sql = "INSERT INTO Subject(institutionId,courseId,branchId,semester,name) VALUES(";
+				
+				if(!StringUtils.isEmpty(institution) && !StringUtils.isEmpty(course) && !StringUtils.isEmpty(branch) 
+						&& !StringUtils.isEmpty(semester) && !StringUtils.isEmpty(subject)) {
+					sql += "'" +institution+"',";
+					sql += "'" +course+"',";
+					sql += "'" +branch+"',";
+					sql += "'" +semester+"',";
+					sql += "'" +subject+"')";
+					
+					int a = stmt.executeUpdate(sql);
+				}
+				
+				
+
+				stmt.close();
+				conn.close();
+
+			}catch(SQLIntegrityConstraintViolationException se){
+				isSuccess = false;
+				System.out.print("Constraint violation exception");
+				se.printStackTrace();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}
+			}
+			return isSuccess;
 		}
 }

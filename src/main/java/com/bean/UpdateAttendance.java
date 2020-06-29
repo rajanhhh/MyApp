@@ -1,7 +1,6 @@
 package com.bean;
 
-public class Attendance {
-	private String date;
+public class UpdateAttendance {
 	private String id;
 	private String first;
 	private String last;
@@ -9,15 +8,9 @@ public class Attendance {
 	private String course;
 	private String branch;
 	private String semester;
-	private String subject;
 	private String presence;
+	private String status;
 	
-	public String getDate() {
-		return date;
-	}
-	public void setDate(String date) {
-		this.date = date;
-	}
 	public String getId() {
 		return id;
 	}
@@ -66,10 +59,10 @@ public class Attendance {
 	public void setPresence(String presence) {
 		this.presence = presence;
 	}
-	public String getSubject() {
-		return subject;
+	public String getStatus() {
+		return status;
 	}
-	public void setSubject(String subject) {
-		this.subject = subject;
+	public void setStatus(String status) {
+		this.status = status;
 	}
 }

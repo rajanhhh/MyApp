@@ -1,6 +1,9 @@
 <%@ page contentType="text/html; charset = UTF-8"%>
 <html>
 <head>
+<!-- <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1 ,maximum-scale=1"> -->
 <script src="/js/jquery.min.js"></script>
 <script src="/js/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/customStyle.css">
@@ -23,12 +26,19 @@
 	        <ul class="dropdown-menu">
 	          <li><a href="/get">Search Student</a></li>
 	          <li><a href="/add">Add Student Data</a></li>
+	          <li><a href="/updateData">Update/Delete Student Data</a></li>
 	        </ul>
 	      </li>
 	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendance<span class="caret"></span></a>
 	        <ul class="dropdown-menu">
 	          <li><a href="/viewAttendance">View Report</a></li>
 	          <li><a href="/addAttendance">Add Attendance</a></li>
+	          <li><a href="/updateAttendance">Update Attendance</a></li>
+	        </ul>
+	      </li>
+	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin Zone<span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+	          <li><a href="/addSubject">Add New Subject</a></li>
 	        </ul>
 	      </li>
 	    </ul>

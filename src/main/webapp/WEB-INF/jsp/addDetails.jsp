@@ -12,7 +12,7 @@
 </head>
 
 <body>
-	<h3 id = "errorMessage"></h3>
+	
 	<h2 id= "institutionList"  hidden= "hidden">${institutionList}</h2>
 	<h2 id= "courseList"  hidden= "hidden">${courseList}</h2>
 	<h2 id= "branchList"  hidden= "hidden">${branchList}</h2>
@@ -28,18 +28,27 @@
 	        <ul class="dropdown-menu">
 	          <li><a href="/get">Search Student</a></li>
 	          <li><a href="/add">Add Student Data</a></li>
+	          <li><a href="/updateData">Update/Delete Student Data</a></li>
+	          
 	        </ul>
 	      </li>
 	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendance<span class="caret"></span></a>
 	        <ul class="dropdown-menu">
 	          <li><a href="/viewAttendance">View Report</a></li>
 	          <li><a href="/addAttendance">Add Attendance</a></li>
+	          <li><a href="/updateAttendance">Update Attendance</a></li>
+	        </ul>
+	      </li>
+	      <li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin Zone<span class="caret"></span></a>
+	        <ul class="dropdown-menu">
+	          <li><a href="/addSubject">Add New Subject</a></li>
 	        </ul>
 	      </li>
 	    </ul>
 	  </div>
 	</nav>
 	
+	<h3 id = "errorMessage"></h3>
 	<form class="form-horizontal">
 		<br>
 		<div class="form-group">
@@ -69,6 +78,7 @@
 		<div class="form-group">
 				<label class="control-label col-sm-5">Semester/Year : </label>
 				<select list="semesters" name = "semester" class="col-sm-5 form-control" id = "semester" type="text">
+				  <option value="">--Select--</option>
 				  <option value="1">1</option>
 				  <option value="2">2</option>
 				  <option value="3">3</option>

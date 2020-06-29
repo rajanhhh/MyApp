@@ -8,6 +8,7 @@ public class AttendancePercentage {
 	private String course;
 	private String branch;
 	private String semester;
+	private String subject;
 	private String attendedDays;
 	private String totalDays;
 	private String percentage;
@@ -53,6 +54,12 @@ public class AttendancePercentage {
 	}
 	public void setSemester(String semester) {
 		this.semester = semester;
+	}
+	public String getSubject() {
+		return subject;
+	}
+	public void setSubject(String subject) {
+		this.subject = subject;
 	}
 	public String getTotalDays() {
 		return totalDays;
