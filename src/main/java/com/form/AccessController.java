@@ -27,9 +27,9 @@ public class AccessController {
 	public String getLoginPage(HttpSession session,HttpServletResponse response,ModelMap model) {
 		try {
 			if(String.valueOf(session.getAttribute("session")) == "valid") {
-				//response.sendRedirect("/addAttendance");
-				//return "loginPage";
-                                return MyController.addAttendancePage(model);
+				response.sendRedirect("/addAttendance");
+				return "loginPage";
+                //return MyController.addAttendancePage(model);
 			}
 			return "loginPage";
 		} catch (Exception e) {
@@ -51,9 +51,9 @@ public class AccessController {
 					response.setStatus(400);
 				}else {
 					session.setAttribute("session", "valid");
-					//response.sendRedirect("/addAttendance");
-					//return "loginPage";
-                                        return MyController.addAttendancePage(model);
+					response.sendRedirect("/addAttendance");
+					return "loginPage";
+                   //return MyController.addAttendancePage(model);
 				}
 			}
 		} catch (Exception e) {
