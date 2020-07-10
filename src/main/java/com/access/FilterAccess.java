@@ -20,7 +20,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 @Component
-@WebFilter("/*")
+//@WebFilter("/*")
 //@WebFilter("^\\/(?!(js|css)).*$")
 //@ComponentScan(resourcePattern = "*")
 public class FilterAccess implements Filter{
