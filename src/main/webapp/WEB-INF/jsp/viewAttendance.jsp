@@ -9,7 +9,9 @@
 <link rel="stylesheet" href="/css/navbarbootstrap.min.css">
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
+<link rel="stylesheet" href="/css/printStyle.css" media="print">
 <script src="/js/viewAttendanceData.js"></script>
+<script src="/js/commonScript.js"></script>
 </head>
 <head>
 <title>Attendance Report</title>
@@ -32,7 +34,6 @@
 
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="/">Home</a></li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Student Data</a>
 					<ul class="dropdown-menu">
 						<li><a href="/get" class="nav-item nav-link">Search Student</a></li>
@@ -52,27 +53,30 @@
 						<li><a href="/addSubject" class="nav-item nav-link">Add New Subject</a></li>
 					</ul>
 				</li>
+				<li class="active"><a onclick="logout()" href="#" class="nav-item nav-link">LogOut</a></li>
 			</ul>
 		</div>
 	</nav>
 	
 	<form id = "searchCriteriaForm" class="form-horizontal">
-		<br>
+		
+		<h2 id = "formHeader">View Attendance Report</h2>
+		
 		<div class="form-group">
 			<label class="control-label col-sm-5">Institution Name : </label>
-			<select name = "institution" id = "institution" class="col-sm-5 form-control" type="text"></select>
+			<select name = "institution" id = "institution" class="col-sm-5 form-control mandatory" type="text"></select>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-5">Course Name : </label>
-			<select name = "course" id = "course" class="col-sm-5 form-control" type="text"></select>
+			<select name = "course" id = "course" class="col-sm-5 form-control mandatory" type="text"></select>
 		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-5">Branch Name : </label>
-			<select name = "branch" id = "branch" class="col-sm-5 form-control" type="text"></select>
+			<select name = "branch" id = "branch" class="col-sm-5 form-control mandatory" type="text"></select>
 		</div>
 		<div class="form-group">
 				<label class="control-label col-sm-5">Semester/Year : </label>
-				<select list="semesters" name = "semester" class="col-sm-5 form-control" id = "semester" type="text">
+				<select list="semesters" name = "semester" class="col-sm-5 form-control mandatory" id = "semester" type="text">
 				  <option value="">--Any--</option>
 				  <option value="1">1</option>
 				  <option value="2">2</option>
@@ -95,40 +99,41 @@
 		 <input type="radio" name="selectionType" value="StudentWise"><label><h4><b> Student Report </b></h4></label>
 		 
   		<br>
-		<label><h4><b>From Date</b></h4></label><input name="startDate" id="startDate" type="date" onChange = "dateChanged();">
+		<label><h4><b>From Date</b></h4></label><input name="startDate" id="startDate" type="date" onChange = "dateChanged();"><br>
 		<label><h4><b>To Date</b></h4></label><input name="endDate" id="endDate" type="date" onChange = "dateChanged();"><br> <br>
 		
 		<input type="button" value="Search"  class="btn btn-primary" onclick="submitSearchCriteriaForm()">
 	</form>
 	
 	<h3 id = "errorMessage"></h3>
-	
+	<button id="printButton" onclick="window.print()" style="display:none">Print this page</button>
+	<button id="downloadButton" onclick="downloadAsExcel()" style="float: right;display:none;">Download as excel</button>
 		<table id="attendanceTable" class="table table-bordered" style="display:none">
 			<tbody>
 				<tr>
 					<th>Date</th>
-					<th>Registration Number</th>
+					<th>Reg No</th>
 					<th>First Name</th>
 					<th>Last Name</th>
-					<th>Institution</th>
-					<th>Course</th>
-					<th>Branch</th>
-					<th>Semester</th>
+					<th style='display: none'>Institution</th>
+					<th style='display: none'>Course</th>
+					<th style='display: none'>Branch</th>
+					<th style='display: none'>Semester</th>
 					<th>Subject</th>
-					<th>Presence</th>
+					<th>Y/N</th>
 				</tr>
 			</tbody>
 		</table>
 		<table id="attendanceTablePercentage" class="table table-bordered" style="display:none">
 			<tbody>
 				<tr>
-					<th>Registration Number</th>
+					<th>Reg No</th>
 					<th>First Name</th>
 					<th>Last Name</th>
-					<th>Institution</th>
-					<th>Course</th>
-					<th>Branch</th>
-					<th>Semester</th>
+					<th style='display: none'>Institution</th>
+					<th style='display: none'>Course</th>
+					<th style='display: none'>Branch</th>
+					<th style='display: none'>Semester</th>
 					<th>Subject</th>
 					<th>Classes Attended</th>
 					<th>Total Number of Classes</th>

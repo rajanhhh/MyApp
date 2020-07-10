@@ -4,9 +4,11 @@ body{
 	margin-right: 2%!important;
 }
 label{
-	font-size: 25px;
+	font-size: 18px;
 	text-align: left!important;
 	color: #b33c3c;
+	margin-bottom: 0px!important;
+	padding-left: 5px!important;
 }
 
 input[type="button"] {
@@ -15,9 +17,10 @@ input[type="button"] {
     width: 20%;
 }
 
-select, input[type="text"]{
-	width: 50%!important;
+table span, table th{
+	font-size: 14px;
 }
+
 #errorMessage{
     text-align: center;
     color: red;
@@ -48,6 +51,12 @@ nav{
     width: 90%!important;
     margin-left: 3%!important;
   }
+  table td{
+  	max-width: 50px;
+  }
+  table span{
+  	word-wrap: break-word;
+  }
 }
 
 .nav:after, .nav:before, .navbar-collapse:after, .navbar-collapse:before, .navbar-header:after, .navbar-header:before, .navbar:after, .navbar:before{
@@ -56,4 +65,11 @@ nav{
 
 .form-horizontal .form-group {
     margin-right: -5px!important;
+}
+
+#formHeader{
+	color: #d51d1d;
+	font-weight: 700;
+	text-align: center;
+	font-size: 22px;
 }

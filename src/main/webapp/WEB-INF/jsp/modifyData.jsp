@@ -10,6 +10,7 @@
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
 <script src="/js/modifyData.js"></script>
+<script src="/js/commonScript.js"></script>
 </head>
 <head>
 <title>Modify Student Data Form</title>
@@ -31,7 +32,6 @@
 
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="/">Home</a></li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Student Data</a>
 					<ul class="dropdown-menu">
 						<li><a href="/get" class="nav-item nav-link">Search Student</a></li>
@@ -51,13 +51,16 @@
 						<li><a href="/addSubject" class="nav-item nav-link">Add New Subject</a></li>
 					</ul>
 				</li>
+				<li class="active"><a onclick="logout()" href="#" class="nav-item nav-link">LogOut</a></li>
 			</ul>
 		</div>
 	</nav>
 	
 	<h3 id = "errorMessage"></h3>
 	<form class="form-horizontal" id="searchForm">
-		<br>
+		
+		<h2 id = "formHeader">Modify Student Details</h2>
+		
 		<div class="form-group">
 			<label class="control-label col-sm-5">Registration Number : </label>
 			<input name = "id" id = "id" class="col-sm-5 form-control" type="text">

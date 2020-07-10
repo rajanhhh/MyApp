@@ -10,13 +10,17 @@
 <link rel="stylesheet" href="/css/navbarbootstrap.min.css">
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
+<script src="/js/welcomePageScript.js"></script>
+<script src="/js/commonScript.js"></script>
 </head>
 <head>
 <title>My App</title>
 </head>
 
 <body>
-	<nav class="navbar navbar-expand-md navbar-light">
+	<h2 id = "session" hidden= "hidden">${session}</h2>
+	
+	<nav class="navbar navbar-expand-md navbar-light" id="validnav">
 		<div class="navbar-header">
 			<a class="navbar-brand" href="/">My App</a>
 		</div>
@@ -26,7 +30,6 @@
 
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="nav navbar-nav">
-				<li class="active"><a href="/">Home</a></li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Student Data</a>
 					<ul class="dropdown-menu">
 						<li><a href="/get" class="nav-item nav-link">Search Student</a></li>
@@ -46,6 +49,23 @@
 						<li><a href="/addSubject" class="nav-item nav-link">Add New Subject</a></li>
 					</ul>
 				</li>
+				<li class="active"><a onclick="logout()">LogOut</a></li>
+			</ul>
+		</div>
+	</nav>
+	
+	<!-- Nav bar for invalid session -->
+	<nav class="navbar navbar-expand-md navbar-light" id="inValidnav" style="display:none">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="/">My App</a>
+		</div>
+		<button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#invalidNavbarCollapse">
+			<span class="navbar-toggler-icon"></span>
+		</button>
+
+		<div class="collapse navbar-collapse" id="invalidNavbarCollapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="/login">LogIn</a></li>
 			</ul>
 		</div>
 	</nav>

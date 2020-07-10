@@ -23,7 +23,7 @@ import com.bean.Subject;
 public class UtilController {
 
 	@Autowired
-	JDBCDemo JDBCDemo;
+	JDBCHandler JDBCHandler;
 	
 	@Autowired
 	JDBCUtil JDBCUtil;

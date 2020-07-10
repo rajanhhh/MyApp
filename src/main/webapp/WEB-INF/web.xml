@@ -18,5 +18,14 @@
       <servlet-name>MyAppWeb</servlet-name>
       <url-pattern>/</url-pattern>
    </servlet-mapping>
+   
+  <!--  <filter>
+		<filter-name>myFilter</filter-name>
+		<filter-class>com.access.FilterAccess</filter-class>
+	</filter>
+	<filter-mapping>
+	   <filter-name>myFilter</filter-name>
+	   <url-pattern>/*</url-pattern>
+	</filter-mapping> -->
  
 </web-app>

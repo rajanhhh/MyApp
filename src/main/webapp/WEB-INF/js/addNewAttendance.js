@@ -6,7 +6,7 @@ $(document).ready(function() {
 	populateBranch();
 	
 	$("#institution, #course, #branch, #semester").change(function(){
-		if('' != document.getElementById("institution").value && '' != document.getElementById("institution").value  &&
+		if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
 		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
 			getListOfSubjects();
 		}else{

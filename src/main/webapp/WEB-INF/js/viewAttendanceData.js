@@ -6,7 +6,7 @@ $(document).ready(function() {
 	populateBranch();
 	
 	$("#institution, #course, #branch, #semester").change(function(){
-		if('' != document.getElementById("institution").value && '' != document.getElementById("institution").value  &&
+		if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
 		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
 			getListOfSubjects();
 		}else{
@@ -78,10 +78,25 @@ function getListOfSubjects(){
 }
 
 function submitSearchCriteriaForm(){
-	if($("input[name='selectionType']:checked").prop("value") == "DayWise")
-		submitSearchCriteriaFormDayWise();
-	else
-		submitSearchCriteriaFormStudentWise();		
+	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
+		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+			
+		for(var i=0; i<document.getElementsByClassName("mandatory").length;i++){
+			document.getElementsByClassName("mandatory")[i].style.borderColor = "#ccc";
+		}
+		
+		if($("input[name='selectionType']:checked").prop("value") == "DayWise")
+			submitSearchCriteriaFormDayWise();
+		else
+			submitSearchCriteriaFormStudentWise();	
+	}else{
+		for(var i=0; i<document.getElementsByClassName("mandatory").length;i++){
+			if(document.getElementsByClassName("mandatory")[i].value == '')
+				document.getElementsByClassName("mandatory")[i].style.borderColor = "red";
+			else
+				document.getElementsByClassName("mandatory")[i].style.borderColor = "#ccc";
+		}
+	}	
 }
 
 function submitSearchCriteriaFormDayWise(){
@@ -97,12 +112,17 @@ function submitSearchCriteriaFormDayWise(){
 				$("#errorMessage").text('');
 				$("#attendanceTablePercentage").hide();
 				$("#attendanceTable").show();
+				$("#printButton").show();
+				$("#downloadButton").show();
 				showAttendanceData();
+				
 		  	},
 			error:function(error){
 				$("#attendanceTable").hide();
 				$("#attendanceTablePercentage").hide();
 				$("#errorMessage").text(error.responseText);
+				$("#printButton").hide();
+				$("#downloadButton").hide();
 			}
 		});
 }
@@ -121,11 +141,15 @@ function submitSearchCriteriaFormStudentWise(){
 				$("#attendanceTable").hide();
 				$("#attendanceTablePercentage").show();
 				showAttendanceData();
+				$("#printButton").show();
+				$("#downloadButton").show();
 		  	},
 			error:function(error){
 				$("#attendanceTable").hide();
 				$("#attendanceTablePercentage").hide();
 				$("#errorMessage").text(error.responseText);
+				$("#printButton").hide();
+				$("#downloadButton").hide();
 			}
 		});
 }
@@ -157,11 +181,50 @@ function showAttendanceData(){
 
         for (var j = 0; j < col.length; j++) {
 			if(col[j] == 'institution' || col[j] =='branch' || col[j] == 'course')
-				tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]].split('~')[0] +"'>" + formData[i][col[j]].split('~')[1] + "</span></td>";
+				tr += "<td style='display: none'><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]].split('~')[0] +"'>" + formData[i][col[j]].split('~')[1] + "</span></td>";
+			else if(col[j] == 'semester')
+				tr += "<td style='display: none'><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
 			else
 				tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
         }
 		tr += '</tr>';
 		tbody.append(tr);
     }
+}
+
+function downloadAsExcel(){
+	var tab_text="<table border='2px'><tr bgcolor='#87AFC6'>";
+	var textRange; var j=0;
+	//tab = document.getElementById('attendanceTablePercentage'); 
+	// id of table
+	
+	for(i = 0 ; i < document.getElementsByTagName("table").length ; i++) {     
+		if(document.getElementsByTagName("table")[i].style.display != "none"){
+			tab = document.getElementsByTagName("table")[i];
+		}
+	}
+	
+	for(j = 0 ; j < tab.rows.length ; j++) 
+	{     
+		tab_text=tab_text+tab.rows[j].innerHTML+"</tr>";
+	}
+	
+	tab_text=tab_text+"</table>";
+	tab_text= tab_text.replace(/<A[^>]*>|<\/A>/g, "");//remove if u want links in your table
+	tab_text= tab_text.replace(/<img[^>]*>/gi,""); // remove if u want images in your table
+	tab_text= tab_text.replace(/<input[^>]*>|<\/input>/gi, ""); // reomves input params
+	
+	var ua = window.navigator.userAgent;
+	var msie = ua.indexOf("MSIE "); 
+	
+	if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))      // If Internet Explorer
+	{
+		txtArea1.document.open("txt/html","replace");
+		txtArea1.document.write(tab_text);
+		txtArea1.document.close();
+		txtArea1.focus(); 
+		sa=txtArea1.document.execCommand("SaveAs",true,"AttendanceData.xls");
+	}  
+	else                 //other browser not tested on IE 11
+		sa = window.open('data:application/vnd.ms-excel,' + encodeURIComponent(tab_text));
 }

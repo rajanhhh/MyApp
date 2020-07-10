@@ -1,0 +1,15 @@
+#searchCriteriaForm{
+	display: none;
+}
+
+#printButton{
+	display: none;
+}
+
+#downloadButton{
+	display: none;
+}
+
+table th, table td{
+	display: table-cell!important;
+}
