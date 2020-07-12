@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1 ,maximum-scale=1">
-<script src="/js/jquery.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+<script src="/js/commonScript/jquery.min.js"></script>
+<script src="/js/commonScript/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/navbarbootstrap.min.css">
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
 <script src="/js/loginPageScript.js"></script>
-<script src="/js/commonScript.js"></script>
+<script src="/js/commonScript/commonScript.js"></script>
 </head>
 <head>
 <title>Login Page</title>

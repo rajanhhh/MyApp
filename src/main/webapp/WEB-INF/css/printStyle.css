@@ -1,4 +1,8 @@
-#searchCriteriaForm{
+/* #searchCriteriaForm{
+	display: none;
+} */
+
+input[type="button"]{
 	display: none;
 }
 
@@ -12,4 +16,8 @@
 
 table th, table td{
 	display: table-cell!important;
+}
+
+a{
+	display: none;
 }

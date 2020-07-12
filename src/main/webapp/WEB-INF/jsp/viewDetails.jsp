@@ -4,13 +4,13 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1 ,maximum-scale=1">
-<script src="/js/jquery.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+<script src="/js/commonScript/jquery.min.js"></script>
+<script src="/js/commonScript/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/navbarbootstrap.min.css">
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
-<script src="/js/showDataInTable.js"></script>
-<script src="/js/commonScript.js"></script>
+<script src="/js/viewDetailsScript.js"></script>
+<script src="/js/commonScript/commonScript.js"></script>
 </head>
 <head>
 <title>Student Details</title>
@@ -32,13 +32,6 @@
 
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="nav navbar-nav">
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Student Data</a>
-					<ul class="dropdown-menu">
-						<li><a href="/get" class="nav-item nav-link">Search Student</a></li>
-						<li><a href="/add" class="nav-item nav-link">Add Student Data</a></li>
-						<li><a href="/updateData" class="nav-item nav-link">Update/Delete Student Data</a></li>
-					</ul>
-				</li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendance</a>
 					<ul class="dropdown-menu">
 						<li><a href="/viewAttendance" class="nav-item nav-link">View Report</a></li>
@@ -46,12 +39,20 @@
 						<li><a href="/updateAttendance" class="nav-item nav-link">Update Attendance</a></li>
 					</ul>
 				</li>
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin Zone</a>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Manage Subjects</a>
 					<ul class="dropdown-menu">
 						<li><a href="/addSubject" class="nav-item nav-link">Add New Subject</a></li>
+						<li><a href="/modifySubject" class="nav-item nav-link">Modify Subject Name</a></li>
 					</ul>
 				</li>
-				<li class="active"><a onclick="logout()" href="#" class="nav-item nav-link">LogOut</a></li>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Manage Student Info</a>
+					<ul class="dropdown-menu">
+						<li><a href="/get" class="nav-item nav-link">Search Student</a></li>
+						<li><a href="/add" class="nav-item nav-link">Add Student Data</a></li>
+						<li><a href="/updateData" class="nav-item nav-link">Update/Delete Student Data</a></li>
+					</ul>
+				</li>
+				<li><a href="#" id="logoutButton" onclick="logout()">LogOut</a></li>
 			</ul>
 		</div>
 	</nav>
@@ -104,5 +105,6 @@
 				</tr>
 			</tbody>
 		</table>
+	<div class= "loader" style="display: none;"> </div>
 </body>
 </html>

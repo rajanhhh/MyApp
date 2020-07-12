@@ -14,16 +14,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import com.form.MyController;
+
 @Component
 @WebFilter("/*")
-//@WebFilter("^\\/(?!(js|css)).*$")
-//@ComponentScan(resourcePattern = "*")
 public class FilterAccess implements Filter{
+	
+	@Autowired
+	MyController MyController;
 	
 	static final Pattern STATIC_RESOURCES = Pattern.compile("(^/js/.*)|(^/css/.*)|(^/img/.*)|(^/fonts/.*)|(/favicon.ico)");
 	
@@ -45,10 +49,12 @@ public class FilterAccess implements Filter{
     					&& !sessionValidity.contentEquals("valid")) {
     				myResponse.sendRedirect("/login");
     				return;
+    				//return MyController.addAttendancePage();
     			}
     		}else if(!httpRequest.getRequestURL().toString().endsWith("/login")){
     			myResponse.sendRedirect("/login");
 				return;
+    			//return MyController.addAttendancePage();
     		}
         }
 		chain.doFilter(request, response);

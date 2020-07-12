@@ -22,14 +22,14 @@ public class JDBCUtil {
 	
 	// JDBC driver name and database URL
 		static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-		//static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
-		static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
+		static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
+		//static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
 
 		//  Database credentials
-		//static final String USER = "root";
-		//static final String PASS = "rajan";
-		static final String USER = "sql12348159";
-		static final String PASS = "dEEwGHqICT";
+		static final String USER = "root";
+		static final String PASS = "rajan";
+		//static final String USER = "sql12348159";
+		//static final String PASS = "dEEwGHqICT";
 		
 		
 		public ArrayList<Institution> getInstitutionList() {
@@ -252,6 +252,112 @@ public class JDBCUtil {
 				stmt.close();
 				conn.close();
 
+			}catch(SQLIntegrityConstraintViolationException se){
+				isSuccess = false;
+				System.out.print("Constraint violation exception");
+				se.printStackTrace();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}
+			}
+			return isSuccess;
+		}
+		
+		public boolean updateSubject(String institution, String course, String branch, String semester, String subject, String newSubject) {
+			Connection conn = null;
+			Statement stmt = null;
+			boolean isSuccess = true;
+			try{
+				Class.forName(JDBC_DRIVER);
+
+				conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+				stmt = conn.createStatement();
+				
+				if(!StringUtils.isEmpty(institution) && !StringUtils.isEmpty(course) && !StringUtils.isEmpty(branch) 
+						&& !StringUtils.isEmpty(semester) && !StringUtils.isEmpty(subject) && !StringUtils.isEmpty(newSubject)) {
+					String sql;
+					sql = "UPDATE Subject ";
+					sql += "SET ";
+					sql += "name='" + newSubject+"' ";
+					
+					sql += "WHERE ";
+					sql += "institutionId='" + institution+"' AND ";
+					sql += "courseId='" + course+"' AND ";
+					sql += "branchId='" + branch+"' AND ";
+					sql += "semester='" + semester+"' AND ";
+					sql += "id='" + subject+"'";
+					
+					int a = stmt.executeUpdate(sql);
+				}
+				
+				
+
+				stmt.close();
+				conn.close();
+
+			}catch(SQLIntegrityConstraintViolationException se){
+				isSuccess = false;
+				System.out.print("Constraint violation exception");
+				se.printStackTrace();
+			}catch(SQLException se){
+				se.printStackTrace();
+			}catch(Exception e){
+				e.printStackTrace();
+			}finally{
+				try{
+					if(stmt!=null)
+						stmt.close();
+				}catch(SQLException se2){
+				}
+				try{
+					if(conn!=null)
+						conn.close();
+				}catch(SQLException se){
+					se.printStackTrace();
+				}
+			}
+			return isSuccess;
+		}
+		
+		public boolean deleteSubject(String institution, String course, String branch, String semester, String subject) {
+			Connection conn = null;
+			Statement stmt = null;
+			boolean isSuccess = true;
+			try{
+				Class.forName(JDBC_DRIVER);
+
+				conn = DriverManager.getConnection(DB_URL,USER,PASS);
+
+				stmt = conn.createStatement();
+				
+				String sql;
+				sql = "DELETE FROM Subject ";
+				sql += "WHERE ";
+				sql += "institutionId='" + institution+"' AND ";
+				sql += "courseId='" + course+"' AND ";
+				sql += "branchId='" + branch+"' AND ";
+				sql += "semester='" + semester+"' AND ";
+				sql += "id='" + subject+"'";
+				
+				int a = stmt.executeUpdate(sql);
+				System.out.print("Data Deleted successfully");
+				stmt.close();
+				conn.close();
+				
 			}catch(SQLIntegrityConstraintViolationException se){
 				isSuccess = false;
 				System.out.print("Constraint violation exception");

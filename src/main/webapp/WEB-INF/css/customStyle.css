@@ -73,3 +73,50 @@ nav{
 	text-align: center;
 	font-size: 22px;
 }
+input[type="date"]{
+	margin-left: 10px;
+}
+
+.loader {
+  position: fixed;
+  top: 35%;
+  left: 35%;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite; /* Safari */
+  animation: spin 2s linear infinite;
+}
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.blurredForm{
+	filter: blur(2px);
+    -webkit-filter: blur(2px);
+    pointer-events: none;
+    cursor: default;
+}
+#logoutButton{
+	color: #ac3249;
+    font-weight: 600;
+}
+
+/*Welcome page header*/
+#welcomeForm h4{
+	color: #b33c3c;
+    font-weight: 600;
+}
+
+#backButton{
+	margin-left: 0;
+	font-weight: 600;
+}

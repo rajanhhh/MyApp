@@ -157,7 +157,7 @@ public class MyController {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return "modifyData";
+		return "modifyDetails";
 	}
 	
 	@RequestMapping(value = "/updateStudentData",method = RequestMethod.POST)
@@ -345,7 +345,7 @@ public class MyController {
 				return "textResponse";
 				
 			}
-			 ArrayList<AttendancePercentage> arrayList= JDBCHandler.fetchAttendanceRecordPercentage(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,startDate, endDate);
+			 ArrayList<AttendancePercentage> arrayList= JDBCHandler.fetchAttendanceRecordPercentage(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,startDate, endDate);
 			 if(arrayList.size() != 0) {
 				 for (AttendancePercentage attendancePercentage : arrayList) {
 					 if(StringUtils.isEmpty(attendancePercentage.getTotalDays()) || attendancePercentage.getTotalDays() == "0") {

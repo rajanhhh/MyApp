@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1 ,maximum-scale=1">
-<script src="/js/jquery.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
+<script src="/js/commonScript/jquery.min.js"></script>
+<script src="/js/commonScript/bootstrap.min.js"></script>
 <link rel="stylesheet" href="/css/navbarbootstrap.min.css">
 <link rel="stylesheet" href="/css/customStyle.css">
 <link rel="stylesheet" href="/css/bootstrap.min.css">
 <link rel="stylesheet" href="/css/printStyle.css" media="print">
-<script src="/js/viewAttendanceData.js"></script>
-<script src="/js/commonScript.js"></script>
+<script src="/js/viewAttendanceScript.js"></script>
+<script src="/js/commonScript/commonScript.js"></script>
 </head>
 <head>
 <title>Attendance Report</title>
@@ -34,13 +34,6 @@
 
 		<div class="collapse navbar-collapse" id="navbarCollapse">
 			<ul class="nav navbar-nav">
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Student Data</a>
-					<ul class="dropdown-menu">
-						<li><a href="/get" class="nav-item nav-link">Search Student</a></li>
-						<li><a href="/add" class="nav-item nav-link">Add Student Data</a></li>
-						<li><a href="/updateData" class="nav-item nav-link">Update/Delete Student Data</a></li>
-					</ul>
-				</li>
 				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Attendance</a>
 					<ul class="dropdown-menu">
 						<li><a href="/viewAttendance" class="nav-item nav-link">View Report</a></li>
@@ -48,12 +41,20 @@
 						<li><a href="/updateAttendance" class="nav-item nav-link">Update Attendance</a></li>
 					</ul>
 				</li>
-				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin Zone</a>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Manage Subjects</a>
 					<ul class="dropdown-menu">
 						<li><a href="/addSubject" class="nav-item nav-link">Add New Subject</a></li>
+						<li><a href="/modifySubject" class="nav-item nav-link">Modify Subject Name</a></li>
 					</ul>
 				</li>
-				<li class="active"><a onclick="logout()" href="#" class="nav-item nav-link">LogOut</a></li>
+				<li class="dropdown"><a class="dropdown-toggle" data-toggle="dropdown" href="#">Manage Student Info</a>
+					<ul class="dropdown-menu">
+						<li><a href="/get" class="nav-item nav-link">Search Student</a></li>
+						<li><a href="/add" class="nav-item nav-link">Add Student Data</a></li>
+						<li><a href="/updateData" class="nav-item nav-link">Update/Delete Student Data</a></li>
+					</ul>
+				</li>
+				<li><a href="#" id="logoutButton" onclick="logout()">LogOut</a></li>
 			</ul>
 		</div>
 	</nav>
@@ -61,7 +62,10 @@
 	<form id = "searchCriteriaForm" class="form-horizontal">
 		
 		<h2 id = "formHeader">View Attendance Report</h2>
-		
+		<div class="form-group">
+			<label class="control-label col-sm-5">Registration Number : </label>
+			<input name = "id" placeholder="Leave blank to search for all students" id = "id" class="col-sm-5 form-control" type="text">
+		</div>
 		<div class="form-group">
 			<label class="control-label col-sm-5">Institution Name : </label>
 			<select name = "institution" id = "institution" class="col-sm-5 form-control mandatory" type="text"></select>
@@ -95,8 +99,8 @@
 			</select>
 			</div>
 		
-		 <input type="radio" name="selectionType" checked="checked" value="DayWise"><label><h4><b> Day by Day Report </b></h4></label>
-		 <input type="radio" name="selectionType" value="StudentWise"><label><h4><b> Student Report </b></h4></label>
+		 <input type="radio" name="selectionType" id="DayWise" checked="checked" value="DayWise"><label for="DayWise"><h4><b> Day by Day Report </b></h4></label>
+		 <input type="radio" name="selectionType" id="StudentWise" value="StudentWise"><label for="StudentWise"><h4><b> Student Report </b></h4></label>
 		 
   		<br>
 		<label><h4><b>From Date</b></h4></label><input name="startDate" id="startDate" type="date" onChange = "dateChanged();"><br>
@@ -141,6 +145,6 @@
 				</tr>
 			</tbody>
 		</table>
-	
+	<div class= "loader" style="display: none;"> </div>
 </body>
 </html>

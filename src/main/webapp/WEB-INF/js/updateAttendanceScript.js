@@ -82,6 +82,10 @@ function submitSearchCriteriaForm(){
 		'' != document.getElementById("course").value  && '' != document.getElementById("branch").value &&
 		'' != document.getElementById("semester").value && '' != document.getElementById("subject").value &&
 		 '' != document.getElementById("date").value){
+			
+		document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
+		$(".loader").show();
+		
 		$.ajax({
 			url:"/getAttendanceDataForAll",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value 
@@ -94,10 +98,14 @@ function submitSearchCriteriaForm(){
 				$("#errorMessage").text('');
 				$("#attendanceForm").show();
 				showAttendanceData();
+				document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.remove("blurredForm");})
+				$(".loader").hide();
 		  	},
 			error:function(error){
 				$("#attendanceForm").hide();
 				$("#errorMessage").text(error.responseText);
+				document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.remove("blurredForm");})
+				$(".loader").hide();
 			}
 		});
 	}else{
@@ -164,6 +172,10 @@ function showAttendanceData(){
 }
 
 function submitForm(){
+	
+	document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
+	$(".loader").show();
+	
 			var json = '[';
 		   var otArr = [];
 		   var tbl2 = $('#attendanceTable tbody tr').each(function(i) {        
@@ -192,9 +204,13 @@ function submitForm(){
 			type:'post',
 		  	success:function(json){
 				$("#errorMessage").text(json);
+				document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.remove("blurredForm");})
+				$(".loader").hide();
 		  	},
 			error:function(error){
 				$("#errorMessage").text(error.responseText);
+				document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.remove("blurredForm");})
+				$(".loader").hide();
 			}
 		});
 }

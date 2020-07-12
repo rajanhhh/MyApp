@@ -21,14 +21,14 @@ import com.bean.UpdateAttendance;
 public class JDBCHandler {
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-	//static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
-	static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
+	static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
+	//static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
 
 	//  Database credentials
-	//static final String USER = "root";
-	//static final String PASS = "rajan";
-	static final String USER = "sql12348159";
-	static final String PASS = "dEEwGHqICT";
+	static final String USER = "root";
+	static final String PASS = "rajan";
+	//static final String USER = "sql12348159";
+	//static final String PASS = "dEEwGHqICT";
 
 	public static void main(String[] args) {
 		Connection conn = null;
@@ -442,7 +442,7 @@ public class JDBCHandler {
 			String sql = "";
 			sql = "SELECT a.date, a.id,a.presence,s.first, s.last, s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution, c.name course, b.name branch, a.semester, sub.name subject FROM Attendance a INNER JOIN Student s ON a.id = s.id INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id INNER JOIN Subject sub ON a.subjectId = sub.id";
 			
-			if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester) || !StringUtils.isEmpty(subject) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate)) {
+			if(!StringUtils.isEmpty(id) || !StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester) || !StringUtils.isEmpty(subject) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate)) {
 				sql += " WHERE ";
 				if(!StringUtils.isEmpty(id))
 					sql += "s.id='" + id+"' AND ";
@@ -506,7 +506,7 @@ public class JDBCHandler {
 		return arrayList;
 	}
 	
-	public ArrayList<AttendancePercentage> fetchAttendanceRecordPercentage(String institution, String course, String branch, String semester, String subject,String startDate, String endDate) {
+	public ArrayList<AttendancePercentage> fetchAttendanceRecordPercentage(String id,String institution, String course, String branch, String semester, String subject,String startDate, String endDate) {
 		Connection conn = null;
 		Statement stmt = null;
 		ArrayList<AttendancePercentage> arrayList = new ArrayList<AttendancePercentage>();
@@ -521,6 +521,8 @@ public class JDBCHandler {
 			
 			if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate) || !StringUtils.isEmpty(subject)) {
 				sql += " WHERE ";
+				if(!StringUtils.isEmpty(id))
+					sql += "s.id='" + id+"' AND ";
 				if(!StringUtils.isEmpty(institution))
 					sql += "s.institutionId='" + institution+"' AND ";
 				if(!StringUtils.isEmpty(course))
@@ -662,7 +664,7 @@ public class JDBCHandler {
 			for (int i = 0; i < arrayList.size(); i++) {
 				String sql;
 				UpdateAttendance updateAttendance = arrayList.get(i);
-				if(updateAttendance.getStatus() == "new") {
+				if(updateAttendance.getStatus().equalsIgnoreCase("new")) {
 					sql = "INSERT INTO Attendance (id, date, institutionId, courseId, branchId, semester, presence, subjectId) VALUES (";
 					sql += updateAttendance.getId()+",";
 					sql += "'" +date+"',";
