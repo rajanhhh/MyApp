@@ -9,6 +9,7 @@ import java.sql.SQLIntegrityConstraintViolationException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
@@ -19,16 +20,20 @@ import com.bean.UpdateAttendance;
 
 @Component("JDBCHandler")
 public class JDBCHandler {
+	
+	 @Value("${spring.datasource.driverClassName}")
+	 private static String driver;
+	
 	// JDBC driver name and database URL
 	static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-	//static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
-	static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
+	static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
+	//static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
 
 	//  Database credentials
-	//static final String USER = "root";
-	//static final String PASS = "rajan";
-	static final String USER = "sql12348159";
-	static final String PASS = "dEEwGHqICT";
+	static final String USER = "root";
+	static final String PASS = "rajan";
+	//static final String USER = "sql12348159";
+	//static final String PASS = "dEEwGHqICT";
 
 	public static void main(String[] args) {
 		Connection conn = null;
@@ -46,7 +51,7 @@ public class JDBCHandler {
 			student.setLast("Nayak");
 			student.setInstitution("2");
 			student.setCourse("3");
-			student.setSemester("IV");
+			student.setYear("IV");
 			student.setBranch("2");
 			
 			ArrayList<Student> arrayList = new ArrayList<Student>();
@@ -111,7 +116,7 @@ public class JDBCHandler {
 			stmt = conn.createStatement();
 			String sql;
 			//sql = "SELECT id, first, last, age FROM Employees";
-			sql = "SELECT s.id,s.first,s.last,i.name institution,b.name branch,s.semester,c.name course FROM Student s INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
+			sql = "SELECT s.id,s.first,s.last,i.name institution,b.name branch,s.year,c.name course FROM Student s INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
 			ResultSet rs = stmt.executeQuery(sql);
 
 			while(rs.next()){
@@ -122,7 +127,7 @@ public class JDBCHandler {
 				student.setInstitution(rs.getString("institution"));
 				student.setCourse(rs.getString("course"));
 				student.setBranch(rs.getString("branch"));
-				student.setSemester(rs.getString("semester"));
+				student.setYear(rs.getString("year"));
 				arrayList.add(student);
 
 			}
@@ -149,20 +154,21 @@ public class JDBCHandler {
 		return arrayList;
 	}
 	
-	public static ArrayList<Student> fetchFilteredData(String id, String institution, String course, String branch, String semester) {
+	public static ArrayList<Student> fetchFilteredData(String id, String institution, String course, String branch, String year) {
 		Connection conn = null;
 		Statement stmt = null;
 		ArrayList<Student> arrayList = new ArrayList<Student>();
 		try{
+			System.out.println(driver);
 			Class.forName(JDBC_DRIVER);
 
 			conn = DriverManager.getConnection(DB_URL,USER,PASS);
 
 			stmt = conn.createStatement();
 			String sql;
-			sql = "SELECT s.id,s.first,s.last,s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution,b.name branch,s.semester,c.name course FROM Student s INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
+			sql = "SELECT s.id,s.first,s.last,s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution,b.name branch,s.year,c.name course FROM Student s INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id";
 			
-			if(!StringUtils.isEmpty(id) || !StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester)) {
+			if(!StringUtils.isEmpty(id) || !StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(year)) {
 				sql += " WHERE ";
 				if(!StringUtils.isEmpty(id))
 					sql += "s.id='" + id+"' AND ";
@@ -172,8 +178,8 @@ public class JDBCHandler {
 					sql += "s.courseId='" + course+"' AND ";
 				if(!StringUtils.isEmpty(branch))
 					sql += "s.branchId='" + branch+"' AND ";
-				if(!StringUtils.isEmpty(semester))
-					sql += "s.semester='" + semester+"' AND ";
+				if(!StringUtils.isEmpty(year))
+					sql += "s.year='" + year+"' AND ";
 				sql = sql.substring(0, sql.length()-4);
 			}
 			
@@ -187,7 +193,7 @@ public class JDBCHandler {
 				student.setInstitution(rs.getString("institutionId") + "~"+ rs.getString("institution"));
 				student.setCourse(rs.getString("courseId") + '~' + rs.getString("course"));
 				student.setBranch(rs.getString("branchId") + '~' + rs.getString("branch"));
-				student.setSemester(rs.getString("semester"));
+				student.setYear(rs.getString("year"));
 				arrayList.add(student);
 
 			}
@@ -226,13 +232,13 @@ public class JDBCHandler {
 			stmt = conn.createStatement();
 			
 			String sql;
-			sql = "INSERT INTO Student (id, first, last, courseId, semester, branchId, institutionId) VALUES (";
+			sql = "INSERT INTO Student (id, first, last, courseId, year, branchId, institutionId) VALUES (";
 			if(null != student) {
 				sql += student.getId()+",";
 				sql += "'" +student.getFirst()+"',";
 				sql += "'" +student.getLast()+"',";
 				sql += "'" +student.getCourse()+"',";
-				sql += "'" +student.getSemester()+"',";
+				sql += "'" +student.getYear()+"',";
 				sql += "'" +student.getBranch()+"',";
 				sql += student.getInstitution() + ")";
 				int a = stmt.executeUpdate(sql);
@@ -265,7 +271,7 @@ public class JDBCHandler {
 		return isSuccess;
 	}
 	
-	public boolean updateStudentDetails(Student student,String newFirst, String newLast, String newInstitution, String newCourse, String newBranch, String newSemester) {
+	public boolean updateStudentDetails(Student student,String newFirst, String newLast, String newInstitution, String newCourse, String newBranch, String newYear) {
 		Connection conn = null;
 		Statement stmt = null;
 		boolean isSuccess = true;
@@ -284,7 +290,7 @@ public class JDBCHandler {
 			sql += "institutionId='" + newInstitution+"' , ";
 			sql += "courseId='" + newCourse+"' , ";
 			sql += "branchId='" + newBranch+"' , ";
-			sql += "semester='" + newSemester+"' ";
+			sql += "year='" + newYear+"' ";
 			
 			sql += "WHERE ";
 			sql += "id='" + student.getId()+"' AND ";
@@ -293,7 +299,7 @@ public class JDBCHandler {
 			sql += "institutionId='" + student.getInstitution()+"' AND ";
 			sql += "courseId='" + student.getCourse()+"' AND ";
 			sql += "branchId='" + student.getBranch()+"' AND ";
-			sql += "semester='" + student.getSemester()+"'";
+			sql += "year='" + student.getYear()+"'";
 			
 			int a = stmt.executeUpdate(sql);
 			System.out.print("Data Updated successfully");
@@ -344,7 +350,7 @@ public class JDBCHandler {
 			sql += "institutionId='" + student.getInstitution()+"' AND ";
 			sql += "courseId='" + student.getCourse()+"' AND ";
 			sql += "branchId='" + student.getBranch()+"' AND ";
-			sql += "semester='" + student.getSemester()+"'";
+			sql += "year='" + student.getYear()+"'";
 			
 			int a = stmt.executeUpdate(sql);
 			System.out.print("Data Deleted successfully");
@@ -388,14 +394,14 @@ public class JDBCHandler {
 			for (int i = 0; i < arrayList.size(); i++) {
 				String sql;
 				Attendance attendance = arrayList.get(i);
-				sql = "INSERT INTO Attendance (id, date, institutionId, courseId, branchId, semester, presence, subjectId) VALUES (";
+				sql = "INSERT INTO Attendance (id, date, institutionId, courseId, branchId, year, presence, subjectId) VALUES (";
 				if(null != attendance) {
 					sql += attendance.getId()+",";
 					sql += "'" +date+"',";
 					sql += "'" +attendance.getInstitution()+"',";
 					sql += "'" +attendance.getCourse()+"',";
 					sql += "'" +attendance.getBranch()+"',";
-					sql += "'" +attendance.getSemester()+"',";
+					sql += "'" +attendance.getYear()+"',";
 					sql += "'" +attendance.getPresence()+"',";
 					sql += "'" +attendance.getSubject()+ "')";
 				}
@@ -429,7 +435,7 @@ public class JDBCHandler {
 		return isSuccess;
 	}
 	
-	public ArrayList<Attendance> fetchAttendanceRecord(String id,String institution, String course, String branch, String semester,String subject, String startDate, String endDate) {
+	public ArrayList<Attendance> fetchAttendanceRecord(String id,String institution, String course, String branch, String year,String subject, String startDate, String endDate) {
 		Connection conn = null;
 		Statement stmt = null;
 		ArrayList<Attendance> arrayList = new ArrayList<Attendance>();
@@ -440,9 +446,9 @@ public class JDBCHandler {
 
 			stmt = conn.createStatement();
 			String sql = "";
-			sql = "SELECT a.date, a.id,a.presence,s.first, s.last, s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution, c.name course, b.name branch, a.semester, sub.name subject FROM Attendance a INNER JOIN Student s ON a.id = s.id INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id INNER JOIN Subject sub ON a.subjectId = sub.id";
+			sql = "SELECT a.date, a.id,a.presence,s.first, s.last, s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution, c.name course, b.name branch, a.year, sub.name subject FROM Attendance a INNER JOIN Student s ON a.id = s.id INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id INNER JOIN Subject sub ON a.subjectId = sub.id";
 			
-			if(!StringUtils.isEmpty(id) || !StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester) || !StringUtils.isEmpty(subject) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate)) {
+			if(!StringUtils.isEmpty(id) || !StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(year) || !StringUtils.isEmpty(subject) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate)) {
 				sql += " WHERE ";
 				if(!StringUtils.isEmpty(id))
 					sql += "s.id='" + id+"' AND ";
@@ -452,8 +458,8 @@ public class JDBCHandler {
 					sql += "s.courseId='" + course+"' AND ";
 				if(!StringUtils.isEmpty(branch))
 					sql += "s.branchId='" + branch+"' AND ";
-				if(!StringUtils.isEmpty(semester))
-					sql += "s.semester='" + semester+"' AND ";
+				if(!StringUtils.isEmpty(year))
+					sql += "s.year='" + year+"' AND ";
 				if(!StringUtils.isEmpty(subject))
 					sql += "sub.id='" + subject+"' AND ";
 				if(!StringUtils.isEmpty(startDate))
@@ -475,7 +481,7 @@ public class JDBCHandler {
 				attendance.setInstitution(rs.getString("institutionId") + "~"+ rs.getString("institution"));
 				attendance.setCourse(rs.getString("courseId") + '~' + rs.getString("course"));
 				attendance.setBranch(rs.getString("branchId") + '~' + rs.getString("branch"));
-				attendance.setSemester(rs.getString("semester"));
+				attendance.setYear(rs.getString("year"));
 				attendance.setSubject(rs.getString("subject"));
 				arrayList.add(attendance);
 			}
@@ -506,7 +512,7 @@ public class JDBCHandler {
 		return arrayList;
 	}
 	
-	public ArrayList<AttendancePercentage> fetchAttendanceRecordPercentage(String id,String institution, String course, String branch, String semester, String subject,String startDate, String endDate) {
+	public ArrayList<AttendancePercentage> fetchAttendanceRecordPercentage(String id,String institution, String course, String branch, String year, String subject,String startDate, String endDate) {
 		Connection conn = null;
 		Statement stmt = null;
 		ArrayList<AttendancePercentage> arrayList = new ArrayList<AttendancePercentage>();
@@ -517,9 +523,9 @@ public class JDBCHandler {
 
 			stmt = conn.createStatement();
 			String sql = "";
-			sql = "SELECT a.id ,s.first, s.last,s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution, c.name course, b.name branch, a.semester,sub.name subject,SUM(a.id LIKE '%') totalDays, SUM(presence=\"Y\") attendedDays FROM Attendance a INNER JOIN Student s ON a.id = s.id INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id INNER JOIN Subject sub ON a.subjectId = sub.id";
+			sql = "SELECT a.id ,s.first, s.last,s.institutionId institutionId,s.branchId branchId, s.courseId courseId, i.name institution, c.name course, b.name branch, a.year,sub.name subject,SUM(a.id LIKE '%') totalDays, SUM(presence=\"Y\") attendedDays FROM Attendance a INNER JOIN Student s ON a.id = s.id INNER JOIN Institution i ON s.institutionId = i.id INNER JOIN Branch b ON s.branchId = b.id INNER JOIN Course c ON s.courseId = c.id INNER JOIN Subject sub ON a.subjectId = sub.id";
 			
-			if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate) || !StringUtils.isEmpty(subject)) {
+			if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(year) || !StringUtils.isEmpty(startDate) || !StringUtils.isEmpty(endDate) || !StringUtils.isEmpty(subject)) {
 				sql += " WHERE ";
 				if(!StringUtils.isEmpty(id))
 					sql += "s.id='" + id+"' AND ";
@@ -529,8 +535,8 @@ public class JDBCHandler {
 					sql += "s.courseId='" + course+"' AND ";
 				if(!StringUtils.isEmpty(branch))
 					sql += "s.branchId='" + branch+"' AND ";
-				if(!StringUtils.isEmpty(semester))
-					sql += "s.semester='" + semester+"' AND ";
+				if(!StringUtils.isEmpty(year))
+					sql += "s.year='" + year+"' AND ";
 				if(!StringUtils.isEmpty(subject))
 					sql += "sub.id='" + subject+"' AND ";
 				if(!StringUtils.isEmpty(startDate))
@@ -551,7 +557,7 @@ public class JDBCHandler {
 				attendancePercentage.setInstitution(rs.getString("institutionId") + "~"+ rs.getString("institution"));
 				attendancePercentage.setCourse(rs.getString("courseId") + '~' + rs.getString("course"));
 				attendancePercentage.setBranch(rs.getString("branchId") + '~' + rs.getString("branch"));
-				attendancePercentage.setSemester(rs.getString("semester"));
+				attendancePercentage.setYear(rs.getString("year"));
 				attendancePercentage.setSubject(rs.getString("subject"));
 				attendancePercentage.setTotalDays(rs.getString("totalDays"));
 				attendancePercentage.setAttendedDays(rs.getString("attendedDays"));
@@ -584,7 +590,7 @@ public class JDBCHandler {
 		return arrayList;
 	}
 	
-	public ArrayList<UpdateAttendance> fetchAttendanceRecordForAll(String institution, String course, String branch, String semester,String subject, String date) {
+	public ArrayList<UpdateAttendance> fetchAttendanceRecordForAll(String institution, String course, String branch, String year,String subject, String date) {
 		Connection conn = null;
 		Statement stmt = null;
 		ArrayList<UpdateAttendance> arrayList = new ArrayList<UpdateAttendance>();
@@ -595,20 +601,20 @@ public class JDBCHandler {
 
 			stmt = conn.createStatement();
 			String sql = "";
-			sql = "SELECT s1.id,s1.first,s1.last,s1.institutionId,i.name institution,s1.courseId,c.name course,s1.branchId,b.name branch,s1.semester,pack.date,pack.presence,pack.subject FROM Student s1 LEFT JOIN (SELECT s2.id,a.date,a.presence, sub.name subject FROM Student s2 LEFT JOIN Attendance a ON a.id = s2.id LEFT JOIN Subject sub ON a.subjectId = sub.id";
+			sql = "SELECT s1.id,s1.first,s1.last,s1.institutionId,i.name institution,s1.courseId,c.name course,s1.branchId,b.name branch,s1.year,pack.date,pack.presence,pack.subject FROM Student s1 LEFT JOIN (SELECT s2.id,a.date,a.presence, sub.name subject FROM Student s2 LEFT JOIN Attendance a ON a.id = s2.id LEFT JOIN Subject sub ON a.subjectId = sub.id";
 			
 			sql += " WHERE ";
 			sql += "s2.institutionId='" + institution+"' AND ";
 			sql += "s2.courseId='" + course+"' AND ";
 			sql += "s2.branchId='" + branch+"' AND ";
-			sql += "s2.semester='" + semester+"' AND ";
+			sql += "s2.year='" + year+"' AND ";
 			sql += "a.date='" + date +"' AND ";
 			sql += "sub.id='" + subject +"') ";
 			sql += " pack ON s1.id = pack.id LEFT JOIN Institution i ON s1.institutionId = i.id LEFT JOIN Branch b ON s1.branchId = b.id LEFT JOIN Course c ON s1.courseId = c.id WHERE ";
 			sql += "s1.institutionId='" + institution+"' AND ";
 			sql += "s1.courseId='" + course+"' AND ";
 			sql += "s1.branchId='" + branch+"' AND ";
-			sql += "s1.semester='" + semester+"'";
+			sql += "s1.year='" + year+"'";
 			
 			ResultSet rs = stmt.executeQuery(sql);
 			
@@ -621,7 +627,7 @@ public class JDBCHandler {
 				updateAttendance.setInstitution(rs.getString("institutionId") + "~"+ rs.getString("institution"));
 				updateAttendance.setCourse(rs.getString("courseId") + '~' + rs.getString("course"));
 				updateAttendance.setBranch(rs.getString("branchId") + '~' + rs.getString("branch"));
-				updateAttendance.setSemester(rs.getString("semester"));
+				updateAttendance.setYear(rs.getString("year"));
 				arrayList.add(updateAttendance);
 			}
 			//
@@ -665,13 +671,13 @@ public class JDBCHandler {
 				String sql;
 				UpdateAttendance updateAttendance = arrayList.get(i);
 				if(updateAttendance.getStatus().equalsIgnoreCase("new")) {
-					sql = "INSERT INTO Attendance (id, date, institutionId, courseId, branchId, semester, presence, subjectId) VALUES (";
+					sql = "INSERT INTO Attendance (id, date, institutionId, courseId, branchId, year, presence, subjectId) VALUES (";
 					sql += updateAttendance.getId()+",";
 					sql += "'" +date+"',";
 					sql += "'" +updateAttendance.getInstitution()+"',";
 					sql += "'" +updateAttendance.getCourse()+"',";
 					sql += "'" +updateAttendance.getBranch()+"',";
-					sql += "'" +updateAttendance.getSemester()+"',";
+					sql += "'" +updateAttendance.getYear()+"',";
 					sql += "'" +updateAttendance.getPresence()+"',";
 					sql += "'" +subject+ "')";
 					
@@ -686,7 +692,7 @@ public class JDBCHandler {
 					sql += "institutionId='" + updateAttendance.getInstitution()+"' AND ";
 					sql += "courseId='" + updateAttendance.getCourse()+"' AND ";
 					sql += "branchId='" + updateAttendance.getBranch()+"' AND ";
-					sql += "semester='" + updateAttendance.getSemester()+"' AND ";
+					sql += "year='" + updateAttendance.getYear()+"' AND ";
 					sql += "date='" + date+"' AND ";
 					sql += "subjectId='" + subject+"'";
 					

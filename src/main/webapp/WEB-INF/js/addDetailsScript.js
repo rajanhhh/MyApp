@@ -41,7 +41,7 @@ function submitForm(){
 	if('' != document.getElementById("id").value && '' != document.getElementById("first").value &&
 		'' != document.getElementById("last").value &&
 		'' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 			
 			document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
 			$(".loader").show();
@@ -51,7 +51,7 @@ function submitForm(){
 				data:"id="+document.getElementById("id").value + "&first=" + document.getElementById("first").value
 							+ "&last=" + document.getElementById("last").value + "&institution=" + document.getElementById("institution").value
 							+ "&course=" + document.getElementById("course").value + "&branch=" + document.getElementById("branch").value
-							+ "&semester=" + document.getElementById("semester").value,
+							+ "&year=" + document.getElementById("year").value,
 				type:'post',
 			  	success:function(json){
 					$("#errorMessage").text(json);

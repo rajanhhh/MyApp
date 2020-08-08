@@ -76,8 +76,8 @@
 			<select name = "branch" id = "branch" class="col-sm-5 form-control" type="text"></select>
 			</div>
 		<div class="form-group">
-				<label class="control-label col-sm-5">Semester/Year : </label>
-				<select list="semesters" name = "semester" class="col-sm-5 form-control" id = "semester" type="text">
+				<label class="control-label col-sm-5">Year : </label>
+				<select name = "year" class="col-sm-5 form-control" id = "year" type="text">
 				  <option value="">--Select--</option>
 				  <option value="1">1</option>
 				  <option value="2">2</option>

@@ -5,9 +5,9 @@ $(document).ready(function() {
 	populateCourse();
 	populateBranch();
 	
-	$("#institution, #course, #branch, #semester").change(function(){
+	$("#institution, #course, #branch, #year").change(function(){
 		if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 			getListOfSubjects();
 		}else{
 			$("#subject").html('');
@@ -64,7 +64,7 @@ function getListOfSubjects(){
 		$.ajax({
 			url:"/getSubjectList",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#subjectList").text(json);
@@ -79,7 +79,7 @@ function getListOfSubjects(){
 
 function submitSearchCriteriaForm(){
 	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 			
 		for(var i=0; i<document.getElementsByClassName("mandatory").length;i++){
 			document.getElementsByClassName("mandatory")[i].style.borderColor = "#ccc";
@@ -107,7 +107,7 @@ function submitSearchCriteriaFormDayWise(){
 			url:"/getAttendanceData",
 			data:"id=" + document.getElementById("id").value
 				+ "&institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value 
-				+ "&branch=" + document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value
+				+ "&branch=" + document.getElementById("branch").value + "&year=" + document.getElementById("year").value
 				+ "&subject=" + document.getElementById("subject").value
 				+ "&startDate=" + document.getElementById("startDate").value + "&endDate=" + document.getElementById("endDate").value,
 			type:'post',
@@ -142,7 +142,7 @@ function submitSearchCriteriaFormStudentWise(){
 			url:"/getAttendancePercentage",
 			data:"id=" + document.getElementById("id").value
 				+ "&institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value 
-				+ "&branch=" + document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value
+				+ "&branch=" + document.getElementById("branch").value + "&year=" + document.getElementById("year").value
 				+ "&subject=" + document.getElementById("subject").value
 				+ "&startDate=" + document.getElementById("startDate").value + "&endDate=" + document.getElementById("endDate").value,
 			type:'post',
@@ -197,7 +197,7 @@ function showAttendanceData(){
         for (var j = 0; j < col.length; j++) {
 			if(col[j] == 'institution' || col[j] =='branch' || col[j] == 'course')
 				tr += "<td style='display: none'><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]].split('~')[0] +"'>" + formData[i][col[j]].split('~')[1] + "</span></td>";
-			else if(col[j] == 'semester')
+			else if(col[j] == 'year')
 				tr += "<td style='display: none'><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
 			else
 				tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";

@@ -7,7 +7,7 @@ public class UpdateAttendance {
 	private String institution;
 	private String course;
 	private String branch;
-	private String semester;
+	private String year;
 	private String presence;
 	private String status;
 	
@@ -47,12 +47,6 @@ public class UpdateAttendance {
 	public void setBranch(String branch) {
 		this.branch = branch;
 	}
-	public String getSemester() {
-		return semester;
-	}
-	public void setSemester(String semester) {
-		this.semester = semester;
-	}
 	public String getPresence() {
 		return presence;
 	}
@@ -64,5 +58,11 @@ public class UpdateAttendance {
 	}
 	public void setStatus(String status) {
 		this.status = status;
+	}
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
 	}
 }

@@ -101,7 +101,7 @@ public class MyController {
 			boolean isSuccess = false;
 			if(StringUtils.isEmpty(student.getId()) ||  StringUtils.isEmpty(student.getInstitution())
 					||	StringUtils.isEmpty(student.getFirst()) ||  StringUtils.isEmpty(student.getLast()) 
-					|| StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getSemester()) || StringUtils.isEmpty(student.getCourse())) {
+					|| StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getYear()) || StringUtils.isEmpty(student.getCourse())) {
 				model.addAttribute("message", "Cannot accept null value");
 				
 			}else {
@@ -123,7 +123,7 @@ public class MyController {
 	@RequestMapping(value = "/getfilteredData",method = RequestMethod.POST)
 	public String getFilteredData(ModelMap model,Student student, HttpServletResponse response) {
 		try {
-			ArrayList<Student> arrayList = JDBCHandler.fetchFilteredData(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester());
+			ArrayList<Student> arrayList = JDBCHandler.fetchFilteredData(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear());
 			if(arrayList.size() != 0) {
 				ObjectMapper Obj = new ObjectMapper(); 
 				 String jsonStr = Obj.writeValueAsString(arrayList);
@@ -161,17 +161,17 @@ public class MyController {
 	}
 	
 	@RequestMapping(value = "/updateStudentData",method = RequestMethod.POST)
-	public String updateStudentDetails(ModelMap model,Student student, String newFirst, String newLast, String newInstitution, String newCourse, String newBranch, String newSemester, HttpServletResponse response) {
+	public String updateStudentDetails(ModelMap model,Student student, String newFirst, String newLast, String newInstitution, String newCourse, String newBranch, String newYear, HttpServletResponse response) {
 		try {
 			if(!StringUtils.isEmpty(student.getId()) && !StringUtils.isEmpty(student.getInstitution())
 					&&	!StringUtils.isEmpty(student.getFirst()) && !StringUtils.isEmpty(student.getLast()) 
-					&& !StringUtils.isEmpty(student.getBranch()) && !StringUtils.isEmpty(student.getSemester()) && !StringUtils.isEmpty(student.getCourse())
+					&& !StringUtils.isEmpty(student.getBranch()) && !StringUtils.isEmpty(student.getYear()) && !StringUtils.isEmpty(student.getCourse())
 					&& !StringUtils.isEmpty(newFirst) && !StringUtils.isEmpty(newLast)
 					&&	!StringUtils.isEmpty(newInstitution) && !StringUtils.isEmpty(newCourse) 
-					&& !StringUtils.isEmpty(newBranch) && !StringUtils.isEmpty(newSemester)) {
-				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),null,null,null);
+					&& !StringUtils.isEmpty(newBranch) && !StringUtils.isEmpty(newYear)) {
+				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),null,null,null);
 				 if(arrayList.size() == 0) {
-					 boolean isSuccess = JDBCHandler.updateStudentDetails(student, newFirst, newLast, newInstitution, newCourse, newBranch, newSemester);
+					 boolean isSuccess = JDBCHandler.updateStudentDetails(student, newFirst, newLast, newInstitution, newCourse, newBranch, newYear);
 					 if(isSuccess) {
 						model.addAttribute("message", "Successfully Updated");
 						response.setStatus(200);
@@ -199,8 +199,8 @@ public class MyController {
 		try {
 			if(!StringUtils.isEmpty(student.getId()) && !StringUtils.isEmpty(student.getInstitution())
 					&&	!StringUtils.isEmpty(student.getFirst()) && !StringUtils.isEmpty(student.getLast()) 
-					&& !StringUtils.isEmpty(student.getBranch()) && !StringUtils.isEmpty(student.getSemester()) && !StringUtils.isEmpty(student.getCourse())) {
-				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),null,null,null);
+					&& !StringUtils.isEmpty(student.getBranch()) && !StringUtils.isEmpty(student.getYear()) && !StringUtils.isEmpty(student.getCourse())) {
+				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),null,null,null);
 				 if(arrayList.size() == 0) {
 					 boolean isSuccess = JDBCHandler.deleteStudentDetails(student);
 					 if(isSuccess) {
@@ -268,7 +268,7 @@ public class MyController {
 				attendance.setInstitution(map.get("institution"));
 				attendance.setCourse(map.get("course"));
 				attendance.setBranch(map.get("branch"));
-				attendance.setSemester(map.get("semester"));
+				attendance.setYear(map.get("year"));
 				attendance.setPresence(map.get("presence"));
 				attendance.setSubject(attendanceForm.getSubject());
 				arrayList.add(attendance);
@@ -319,7 +319,7 @@ public class MyController {
 				return "textResponse";
 				
 			}
-			 ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,startDate, endDate);
+			 ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),subject,startDate, endDate);
 			 if(arrayList.size() != 0) {
 				 ObjectMapper Obj = new ObjectMapper(); 
 				 String jsonStr = Obj.writeValueAsString(arrayList);
@@ -345,7 +345,7 @@ public class MyController {
 				return "textResponse";
 				
 			}
-			 ArrayList<AttendancePercentage> arrayList= JDBCHandler.fetchAttendanceRecordPercentage(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,startDate, endDate);
+			 ArrayList<AttendancePercentage> arrayList= JDBCHandler.fetchAttendanceRecordPercentage(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),subject,startDate, endDate);
 			 if(arrayList.size() != 0) {
 				 for (AttendancePercentage attendancePercentage : arrayList) {
 					 if(StringUtils.isEmpty(attendancePercentage.getTotalDays()) || attendancePercentage.getTotalDays() == "0") {
@@ -403,13 +403,13 @@ public class MyController {
 				return "textResponse";
 
 			}
-			ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject, date,date);
+			ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(student.getId(),student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),subject, date,date);
 			if(arrayList.size() ==0){
 				model.addAttribute("message", "Attendance Data doesn't exist for this date. Please go to 'Add Attendance' section");
 				response.setStatus(400);
 				return "textResponse";
 			}else {
-				ArrayList<UpdateAttendance> arrayList1= JDBCHandler.fetchAttendanceRecordForAll(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject, date);
+				ArrayList<UpdateAttendance> arrayList1= JDBCHandler.fetchAttendanceRecordForAll(student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),subject, date);
 				if(arrayList1.size() != 0) {
 					for (UpdateAttendance updateAttendance : arrayList1) { 
 						if(StringUtils.isEmpty(updateAttendance.getPresence()))
@@ -453,7 +453,7 @@ public class MyController {
 				updateAttendance.setInstitution(map.get("institution"));
 				updateAttendance.setCourse(map.get("course"));
 				updateAttendance.setBranch(map.get("branch"));
-				updateAttendance.setSemester(map.get("semester"));
+				updateAttendance.setYear(map.get("year"));
 				updateAttendance.setPresence(map.get("newPresence"));
 				updateAttendance.setStatus(map.get("status"));
 				arrayList.add(updateAttendance);

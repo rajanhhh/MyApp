@@ -81,7 +81,7 @@ function submitSearchCriteriaForm(){
 		$.ajax({
 			url:"/getfilteredData",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#formData").text(json);

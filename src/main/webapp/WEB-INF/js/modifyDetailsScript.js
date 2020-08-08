@@ -10,7 +10,7 @@ var oldLast = null;
 var oldInstitution = null;
 var oldCourse = null;
 var oldBranch = null;
-var oldSemester = null;
+var oldYear = null;
 
 function populateFormData(){
 	var formData = $("#formData")[0].innerHTML;
@@ -126,7 +126,7 @@ function submitSearchCriteriaForm(){
 		$.ajax({
 			url:"/getfilteredData",
 			data:"id=" + document.getElementById("id").value +"&institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#formData").text(json);
@@ -172,8 +172,8 @@ function editRow(){
 	document.getElementById("newBranch").value =row[5].firstElementChild.getAttribute("value");
 	oldBranch =row[5].firstElementChild.getAttribute("value");
 	
-	document.getElementById("newSemester").value =row[6].firstElementChild.getAttribute("value");
-	oldSemester =row[6].firstElementChild.getAttribute("value");
+	document.getElementById("newYear").value =row[6].firstElementChild.getAttribute("value");
+	oldYear =row[6].firstElementChild.getAttribute("value");
 }
 
 function resetData(){
@@ -182,7 +182,7 @@ function resetData(){
 	document.getElementById("newInstitution").value =oldInstitution;
 	document.getElementById("newCourse").value =oldCourse;
 	document.getElementById("newBranch").value =oldBranch;
-	document.getElementById("newSemester").value =oldSemester;
+	document.getElementById("newYear").value =oldYear;
 	
 	for(var i=0; i<document.getElementsByTagName("select").length;i++){
 		document.getElementsByTagName("select")[i].style.borderColor = "#ccc";
@@ -195,7 +195,7 @@ function resetData(){
 function updateData(){
 	if('' != document.getElementById("newFirst").value && '' != document.getElementById("newLast").value &&
 		'' != document.getElementById("newInstitution").value && '' != document.getElementById("newCourse").value  &&
-		'' != document.getElementById("newBranch").value && '' != document.getElementById("newSemester").value){
+		'' != document.getElementById("newBranch").value && '' != document.getElementById("newYear").value){
 			
 			document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
 			$(".loader").show();
@@ -203,11 +203,11 @@ function updateData(){
 			$.ajax({
 				url:"/updateStudentData",
 				data:"id="+ oldId + "&first=" + oldFirst + "&last=" + oldLast + "&institution=" + oldInstitution
-							+ "&course=" + oldCourse + "&branch=" + oldBranch + "&semester=" + oldSemester 
+							+ "&course=" + oldCourse + "&branch=" + oldBranch + "&year=" + oldYear 
 							+ "&newFirst=" + document.getElementById("newFirst").value
 							+ "&newLast=" + document.getElementById("newLast").value + "&newInstitution=" + document.getElementById("newInstitution").value
 							+ "&newCourse=" + document.getElementById("newCourse").value + "&newBranch=" + document.getElementById("newBranch").value
-							+ "&newSemester=" + document.getElementById("newSemester").value,
+							+ "&newYear=" + document.getElementById("newYear").value,
 				type:'post',
 			  	success:function(json){
 					$("#errorMessage").text(json);
@@ -243,7 +243,7 @@ function deleteData(){
 	$.ajax({
 		url:"/deleteStudentData",
 		data:"id="+ oldId + "&first=" + oldFirst + "&last=" + oldLast + "&institution=" + oldInstitution
-							+ "&course=" + oldCourse + "&branch=" + oldBranch + "&semester=" + oldSemester,
+							+ "&course=" + oldCourse + "&branch=" + oldBranch + "&year=" + oldYear,
 		type:'post',
 	  	success:function(json){
 			$("#errorMessage").text(json);

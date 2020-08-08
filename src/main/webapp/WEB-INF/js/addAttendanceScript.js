@@ -5,9 +5,9 @@ $(document).ready(function() {
 	populateCourse();
 	populateBranch();
 	
-	$("#institution, #course, #branch, #semester").change(function(){
+	$("#institution, #course, #branch, #year").change(function(){
 		if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 			getListOfSubjects();
 		}else{
 			$("#subject").html('');
@@ -22,7 +22,7 @@ function populateFormData(){
 	var formData = $("#formData")[0].innerHTML;
 	formData = jQuery.parseJSON(formData);
 	if(formData.length != 0){
-		$("#institution, #course, #branch, #semester").parent("div").hide();
+		$("#institution, #course, #branch, #year").parent("div").hide();
 		document.getElementById("subject").style.borderColor = "#ccc";
 		$("#attendanceForm").show();
 		$("#errorMessage").text('');
@@ -42,7 +42,7 @@ function populateFormData(){
 			var tr = '<tr id = "row" name = "row">';
 	
 	        for (var j = 0; j < col.length; j++) {
-				if(col[j] == 'institution' || col[j] =='branch' || col[j] == 'course' || col[j] == 'semester')
+				if(col[j] == 'institution' || col[j] =='branch' || col[j] == 'course' || col[j] == 'year')
 					tr += "<td hidden='hidden'><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]].split('~')[0] +"'>" + formData[i][col[j]].split('~')[1] + "</span></td>";
 				else
 					tr += "<td><span id='"+ col[j] +"' name='"+ col[j] +"' value='"+ formData[i][col[j]] +"'>" + formData[i][col[j]] + "</span></td>";
@@ -106,7 +106,7 @@ function getListOfSubjects(){
 		$.ajax({
 			url:"/getSubjectList",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#subjectList").text(json);
@@ -121,7 +121,7 @@ function getListOfSubjects(){
 
 function submitSearchCriteriaForm(){
 	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 			
 		document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
 		$(".loader").show();
@@ -129,7 +129,7 @@ function submitSearchCriteriaForm(){
 		$.ajax({
 			url:"/getfilteredData",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#formData").text(json);
@@ -203,6 +203,21 @@ function toggleCheckBox(){
 	else
 		this.event.target.value = "N";
 }
+
+function toggleCheckBoxAll(){
+	if(this.event.target.checked){
+		document.getElementsByName("presence").forEach(function(btn){
+			btn.value = "Y";
+			btn.checked = true;
+		});
+	}else{
+		document.getElementsByName("presence").forEach(function(btn){
+			btn.value = "N";
+			btn.checked = false;
+		});
+	}
+}
+
 function dateChanged(){
 	if(isDataSubmitted){
 		$(':checkbox').prop("checked", false);

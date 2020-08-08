@@ -78,7 +78,7 @@ function populateBranch(){
 
 function submitSearchCriteriaForm(){
 	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 	
 		for(var i=0; i<document.getElementsByTagName("select").length;i++){
 			document.getElementsByTagName("select")[i].style.borderColor = "#ccc";
@@ -89,7 +89,7 @@ function submitSearchCriteriaForm(){
 		$.ajax({
 			url:"/getSubjectList",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#formData").text(json);
@@ -130,8 +130,8 @@ function editRow(){
 	var branch = document.getElementById("branch");
 	document.getElementById("newBranch").textContent = branch.options[branch.selectedIndex].text;
 	
-	var semester = document.getElementById("semester");
-	document.getElementById("newSemester").textContent = semester.options[semester.selectedIndex].text;
+	var year = document.getElementById("year");
+	document.getElementById("newYear").textContent = year.options[year.selectedIndex].text;
 	
 	document.getElementById("subject").value = row[0].firstElementChild.getAttribute("value")
 	document.getElementById("subject").textContent = row[1].firstElementChild.getAttribute("value");
@@ -139,7 +139,7 @@ function editRow(){
 
 function updateData(){
 	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value
 		&& '' != document.getElementById("subject").value && '' != document.getElementById("newSubject").value){
 			
 			document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
@@ -149,7 +149,7 @@ function updateData(){
 				url:"/updateSubjectData",
 				data:"institution=" + document.getElementById("institution").value
 						+ "&course=" + document.getElementById("course").value + "&branch=" + document.getElementById("branch").value
-						+ "&semester=" + document.getElementById("semester").value + "&subject=" + document.getElementById("subject").value
+						+ "&year=" + document.getElementById("year").value + "&subject=" + document.getElementById("subject").value
 						+ "&newSubject=" + document.getElementById("newSubject").value,
 				type:'post',
 			  	success:function(json){
@@ -181,7 +181,7 @@ function deleteData(){
 		url:"/deleteSubjectData",
 		data:"institution=" + document.getElementById("institution").value
 				+ "&course=" + document.getElementById("course").value + "&branch=" + document.getElementById("branch").value
-				+ "&semester=" + document.getElementById("semester").value + "&subject=" + document.getElementById("subject").value,
+				+ "&year=" + document.getElementById("year").value + "&subject=" + document.getElementById("subject").value,
 		type:'post',
 	  	success:function(json){
 			$("#errorMessage").text(json);

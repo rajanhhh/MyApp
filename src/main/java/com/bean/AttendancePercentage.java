@@ -7,7 +7,7 @@ public class AttendancePercentage {
 	private String institution;
 	private String course;
 	private String branch;
-	private String semester;
+	private String year;
 	private String subject;
 	private String attendedDays;
 	private String totalDays;
@@ -49,12 +49,6 @@ public class AttendancePercentage {
 	public void setBranch(String branch) {
 		this.branch = branch;
 	}
-	public String getSemester() {
-		return semester;
-	}
-	public void setSemester(String semester) {
-		this.semester = semester;
-	}
 	public String getSubject() {
 		return subject;
 	}
@@ -78,5 +72,11 @@ public class AttendancePercentage {
 	}
 	public void setPercentage(String percentage) {
 		this.percentage = percentage;
+	}
+	public String getYear() {
+		return year;
+	}
+	public void setYear(String year) {
+		this.year = year;
 	}
 }

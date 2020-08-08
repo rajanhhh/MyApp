@@ -18,14 +18,14 @@ import com.bean.User;
 public class JDBCAccess {
 	// JDBC driver name and database URL
 		static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-		//static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
-		static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
+		static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
+		//static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
 
 		//  Database credentials
-		//static final String USER = "root";
-		//static final String PASS = "rajan";
-		static final String USER = "sql12348159";
-		static final String PASS = "dEEwGHqICT";
+		static final String USER = "root";
+		static final String PASS = "rajan";
+		//static final String USER = "sql12348159";
+		//static final String PASS = "dEEwGHqICT";
 
 		public static void main(String[] args) {
 			Connection conn = null;
@@ -43,7 +43,7 @@ public class JDBCAccess {
 				student.setLast("Nayak");
 				student.setInstitution("2");
 				student.setCourse("3");
-				student.setSemester("IV");
+				student.setYear("IV");
 				student.setBranch("2");
 				
 				ArrayList<Student> arrayList = new ArrayList<Student>();

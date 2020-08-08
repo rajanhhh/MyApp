@@ -5,9 +5,9 @@ $(document).ready(function() {
 	populateCourse();
 	populateBranch();
 	
-	$("#institution, #course, #branch, #semester").change(function(){
+	$("#institution, #course, #branch, #year").change(function(){
 		if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 			getListOfSubjects();
 		}else{
 			$("#subject").html('');
@@ -64,7 +64,7 @@ function getListOfSubjects(){
 		$.ajax({
 			url:"/getSubjectList",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#subjectList").text(json);
@@ -80,7 +80,7 @@ function getListOfSubjects(){
 function submitSearchCriteriaForm(){
 	if('' != document.getElementById("institution").value &&
 		'' != document.getElementById("course").value  && '' != document.getElementById("branch").value &&
-		'' != document.getElementById("semester").value && '' != document.getElementById("subject").value &&
+		'' != document.getElementById("year").value && '' != document.getElementById("subject").value &&
 		 '' != document.getElementById("date").value){
 			
 		document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
@@ -89,7 +89,7 @@ function submitSearchCriteriaForm(){
 		$.ajax({
 			url:"/getAttendanceDataForAll",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value 
-				+ "&branch=" + document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value
+				+ "&branch=" + document.getElementById("branch").value + "&year=" + document.getElementById("year").value
 				+ "&subject=" + document.getElementById("subject").value
 				+ "&date=" + document.getElementById("date").value,
 			type:'post',

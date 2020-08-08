@@ -5,9 +5,9 @@ $(document).ready(function() {
 	populateCourse();
 	populateBranch();
 	
-	$("#institution, #course, #branch, #semester").change(function(){
+	$("#institution, #course, #branch, #year").change(function(){
 		if('' != document.getElementById("institution").value && '' != document.getElementById("institution").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value){
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value){
 			getListOfSubjects();
 		}else{
 			$("#subject").html('');
@@ -67,7 +67,7 @@ function getListOfSubjects(){
 		$.ajax({
 			url:"/getSubjectList",
 			data:"institution=" + document.getElementById("institution").value + "&course=" + document.getElementById("course").value + "&branch=" 
-				+ document.getElementById("branch").value + "&semester=" + document.getElementById("semester").value,
+				+ document.getElementById("branch").value + "&year=" + document.getElementById("year").value,
 			type:'post',
 		  	success:function(json){
 				$("#subjectList").text(json);
@@ -82,7 +82,7 @@ function getListOfSubjects(){
 
 function submitForm(){
 	if('' != document.getElementById("institution").value && '' != document.getElementById("course").value  &&
-		'' != document.getElementById("branch").value && '' != document.getElementById("semester").value &&
+		'' != document.getElementById("branch").value && '' != document.getElementById("year").value &&
 		'' != document.getElementById("newSubject").value){
 			
 			document.querySelectorAll("body :not(.loader):not(nav)").forEach(function myFunction(nodes){nodes.classList.add("blurredForm");})
@@ -92,7 +92,7 @@ function submitForm(){
 				url:"/addNewSubject",
 				data:"institution=" + document.getElementById("institution").value
 						+ "&course=" + document.getElementById("course").value + "&branch=" + document.getElementById("branch").value
-						+ "&semester=" + document.getElementById("semester").value + "&subject=" + document.getElementById("newSubject").value,
+						+ "&year=" + document.getElementById("year").value + "&subject=" + document.getElementById("newSubject").value,
 				type:'post',
 			  	success:function(json){
 					$("#errorMessage").text(json);

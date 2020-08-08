@@ -26,7 +26,7 @@ public class AccessController {
 	@RequestMapping(value = "/login",method = RequestMethod.GET)
 	public String getLoginPage(HttpSession session,HttpServletResponse response,ModelMap model) {
 		try {
-			if(String.valueOf(session.getAttribute("session")) == "valid") {
+			if(!StringUtils.isEmpty(session.getAttribute("session"))) {
 				response.sendRedirect("/addAttendance");
 				return "loginPage";
                 //return MyController.addAttendancePage(model);

@@ -22,14 +22,14 @@ public class JDBCUtil {
 	
 	// JDBC driver name and database URL
 		static final String JDBC_DRIVER = "com.mysql.cj.jdbc.Driver";  
-		//static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
-		static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
+		static final String DB_URL = "jdbc:mysql://127.0.0.1:3306/EMP";
+		//static final String DB_URL = "jdbc:mysql://sql12.freemysqlhosting.net:3306/sql12348159";
 
 		//  Database credentials
-		//static final String USER = "root";
-		//static final String PASS = "rajan";
-		static final String USER = "sql12348159";
-		static final String PASS = "dEEwGHqICT";
+		static final String USER = "root";
+		static final String PASS = "rajan";
+		//static final String USER = "sql12348159";
+		//static final String PASS = "dEEwGHqICT";
 		
 		
 		public ArrayList<Institution> getInstitutionList() {
@@ -165,7 +165,7 @@ public class JDBCUtil {
 			return arrayList;
 		}
 		
-		public ArrayList<Subject> getSubjectList(String institution, String course, String branch, String semester) {
+		public ArrayList<Subject> getSubjectList(String institution, String course, String branch, String year) {
 			Connection conn = null;
 			Statement stmt = null;
 			ArrayList<Subject> arrayList = new ArrayList<Subject>();
@@ -178,7 +178,7 @@ public class JDBCUtil {
 				String sql;
 				sql = "SELECT s.id, s.name FROM Subject s";
 				
-				if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(semester)) {
+				if(!StringUtils.isEmpty(institution) || !StringUtils.isEmpty(course) || !StringUtils.isEmpty(branch) || !StringUtils.isEmpty(year)) {
 					sql += " WHERE ";
 					if(!StringUtils.isEmpty(institution))
 						sql += "s.institutionId='" + institution+"' AND ";
@@ -186,8 +186,8 @@ public class JDBCUtil {
 						sql += "s.courseId='" + course+"' AND ";
 					if(!StringUtils.isEmpty(branch))
 						sql += "s.branchId='" + branch+"' AND ";
-					if(!StringUtils.isEmpty(semester))
-						sql += "s.semester='" + semester+"' AND ";
+					if(!StringUtils.isEmpty(year))
+						sql += "s.year='" + year+"' AND ";
 					sql = sql.substring(0, sql.length()-4);
 				}
 				
@@ -223,7 +223,7 @@ public class JDBCUtil {
 			return arrayList;
 		}
 		
-		public boolean addSubject(String institution, String course, String branch, String semester, String subject) {
+		public boolean addSubject(String institution, String course, String branch, String year, String subject) {
 			Connection conn = null;
 			Statement stmt = null;
 			boolean isSuccess = true;
@@ -234,14 +234,14 @@ public class JDBCUtil {
 
 				stmt = conn.createStatement();
 				String sql;
-				sql = "INSERT INTO Subject(institutionId,courseId,branchId,semester,name) VALUES(";
+				sql = "INSERT INTO Subject(institutionId,courseId,branchId,year,name) VALUES(";
 				
 				if(!StringUtils.isEmpty(institution) && !StringUtils.isEmpty(course) && !StringUtils.isEmpty(branch) 
-						&& !StringUtils.isEmpty(semester) && !StringUtils.isEmpty(subject)) {
+						&& !StringUtils.isEmpty(year) && !StringUtils.isEmpty(subject)) {
 					sql += "'" +institution+"',";
 					sql += "'" +course+"',";
 					sql += "'" +branch+"',";
-					sql += "'" +semester+"',";
+					sql += "'" +year+"',";
 					sql += "'" +subject+"')";
 					
 					int a = stmt.executeUpdate(sql);
@@ -276,7 +276,7 @@ public class JDBCUtil {
 			return isSuccess;
 		}
 		
-		public boolean updateSubject(String institution, String course, String branch, String semester, String subject, String newSubject) {
+		public boolean updateSubject(String institution, String course, String branch, String year, String subject, String newSubject) {
 			Connection conn = null;
 			Statement stmt = null;
 			boolean isSuccess = true;
@@ -288,7 +288,7 @@ public class JDBCUtil {
 				stmt = conn.createStatement();
 				
 				if(!StringUtils.isEmpty(institution) && !StringUtils.isEmpty(course) && !StringUtils.isEmpty(branch) 
-						&& !StringUtils.isEmpty(semester) && !StringUtils.isEmpty(subject) && !StringUtils.isEmpty(newSubject)) {
+						&& !StringUtils.isEmpty(year) && !StringUtils.isEmpty(subject) && !StringUtils.isEmpty(newSubject)) {
 					String sql;
 					sql = "UPDATE Subject ";
 					sql += "SET ";
@@ -298,7 +298,7 @@ public class JDBCUtil {
 					sql += "institutionId='" + institution+"' AND ";
 					sql += "courseId='" + course+"' AND ";
 					sql += "branchId='" + branch+"' AND ";
-					sql += "semester='" + semester+"' AND ";
+					sql += "year='" + year+"' AND ";
 					sql += "id='" + subject+"'";
 					
 					int a = stmt.executeUpdate(sql);
@@ -333,7 +333,7 @@ public class JDBCUtil {
 			return isSuccess;
 		}
 		
-		public boolean deleteSubject(String institution, String course, String branch, String semester, String subject) {
+		public boolean deleteSubject(String institution, String course, String branch, String year, String subject) {
 			Connection conn = null;
 			Statement stmt = null;
 			boolean isSuccess = true;
@@ -350,7 +350,7 @@ public class JDBCUtil {
 				sql += "institutionId='" + institution+"' AND ";
 				sql += "courseId='" + course+"' AND ";
 				sql += "branchId='" + branch+"' AND ";
-				sql += "semester='" + semester+"' AND ";
+				sql += "year='" + year+"' AND ";
 				sql += "id='" + subject+"'";
 				
 				int a = stmt.executeUpdate(sql);

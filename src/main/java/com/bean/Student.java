@@ -7,7 +7,7 @@ public class Student {
 	private String institution;
 	private String course;
 	private String branch;
-	private String semester;
+	private String year;
 	public String getId() {
 		return id;
 	}
@@ -44,10 +44,10 @@ public class Student {
 	public void setBranch(String branch) {
 		this.branch = branch;
 	}
-	public String getSemester() {
-		return semester;
+	public String getYear() {
+		return year;
 	}
-	public void setSemester(String semester) {
-		this.semester = semester;
+	public void setYear(String year) {
+		this.year = year;
 	}
 }

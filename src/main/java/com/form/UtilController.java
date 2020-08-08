@@ -32,11 +32,11 @@ public class UtilController {
 	@RequestMapping(value = "/getSubjectList",method = RequestMethod.POST)
 	public String getSubjectList(ModelMap model, HttpServletResponse response,Student student) {
 		try {
-			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getSemester()) || StringUtils.isEmpty(student.getCourse())) {
+			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getYear()) || StringUtils.isEmpty(student.getCourse())) {
 				model.addAttribute("message", "Cannot accept null value");
 				response.setStatus(400);
 			}else {
-				ArrayList<Subject> arrayList = JDBCUtil.getSubjectList(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester());
+				ArrayList<Subject> arrayList = JDBCUtil.getSubjectList(student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear());
 				if(arrayList.size() != 0) {
 					ObjectMapper Obj = new ObjectMapper(); 
 					 String jsonStr = Obj.writeValueAsString(arrayList);
@@ -77,11 +77,11 @@ public class UtilController {
 	@RequestMapping(value = "/addNewSubject",method = RequestMethod.POST)
 	public String addSubject(ModelMap model, HttpServletResponse response,Student student, String subject) {
 		try {
-			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getSemester()) || StringUtils.isEmpty(student.getCourse()) || StringUtils.isEmpty(subject)) {
+			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getYear()) || StringUtils.isEmpty(student.getCourse()) || StringUtils.isEmpty(subject)) {
 				model.addAttribute("message", "Cannot accept null value");
 				response.setStatus(400);
 			}else {
-				boolean isSuccess = JDBCUtil.addSubject(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(), subject);
+				boolean isSuccess = JDBCUtil.addSubject(student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(), subject);
 				if(isSuccess) {
 					model.addAttribute("message", "Data inserted successfully");
 					response.setStatus(200);
@@ -120,14 +120,14 @@ public class UtilController {
 	@RequestMapping(value = "/updateSubjectData",method = RequestMethod.POST)
 	public String updateSubjectData(ModelMap model, HttpServletResponse response,Student student,String subject, String newSubject) {
 		try {
-			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getSemester()) || StringUtils.isEmpty(student.getCourse()) || StringUtils.isEmpty(subject) || StringUtils.isEmpty(newSubject)) {
+			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getYear()) || StringUtils.isEmpty(student.getCourse()) || StringUtils.isEmpty(subject) || StringUtils.isEmpty(newSubject)) {
 				model.addAttribute("message", "Cannot accept null value");
 				response.setStatus(400);
 			}else {
-				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(null,student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,null,null);
+				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(null,student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),subject,null,null);
 				
 				if(arrayList.size() == 0) {
-					boolean isSuccess = JDBCUtil.updateSubject(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(), subject, newSubject);
+					boolean isSuccess = JDBCUtil.updateSubject(student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(), subject, newSubject);
 					if(isSuccess) {
 						model.addAttribute("message", "Data inserted successfully");
 						response.setStatus(200);
@@ -149,14 +149,14 @@ public class UtilController {
 	@RequestMapping(value = "/deleteSubjectData",method = RequestMethod.POST)
 	public String deleteSubjectData(ModelMap model, HttpServletResponse response,Student student,String subject) {
 		try {
-			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getSemester()) || StringUtils.isEmpty(student.getCourse()) || StringUtils.isEmpty(subject)) {
+			if(StringUtils.isEmpty(student.getInstitution()) || StringUtils.isEmpty(student.getBranch()) ||  StringUtils.isEmpty(student.getYear()) || StringUtils.isEmpty(student.getCourse()) || StringUtils.isEmpty(subject)) {
 				model.addAttribute("message", "Cannot accept null value");
 				response.setStatus(400);
 			}else {
-				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(null,student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(),subject,null,null);
+				ArrayList<Attendance> arrayList= JDBCHandler.fetchAttendanceRecord(null,student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(),subject,null,null);
 				
 				if(arrayList.size() == 0) {
-					boolean isSuccess = JDBCUtil.deleteSubject(student.getInstitution(),student.getCourse(), student.getBranch(), student.getSemester(), subject);
+					boolean isSuccess = JDBCUtil.deleteSubject(student.getInstitution(),student.getCourse(), student.getBranch(), student.getYear(), subject);
 					if(isSuccess) {
 						model.addAttribute("message", "Data Deleted successfully");
 						response.setStatus(200);
