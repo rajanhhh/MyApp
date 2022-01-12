@@ -97,7 +97,7 @@
 	</dependencies>
  
 	<properties>
-		<spring.version>5.2.7.RELEASE</spring.version>
+		<spring.version>5.3.14</spring.version>
 		<maven.compiler.target>1.8</maven.compiler.target>
     		<maven.compiler.source>1.8</maven.compiler.source>
 		<appengine.app.version>1</appengine.app.version>
